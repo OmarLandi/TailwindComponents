@@ -1,0 +1,12 @@
+#!/bin/sh
+# Formatear y corregir archivos con Prettier
+npx prettier --write .
+
+# Ejecutar ESLint con auto-fix
+npx eslint . --fix
+
+# Verificar tipos TypeScript
+npx tsc --noEmit
+
+# Ejecutar tests
+npx vitest run

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+storybook-static/
+
+*.log
+*.local
+
+.env
+.env.local
+.env.*.local
+
+.DS_Store
+Thumbs.db

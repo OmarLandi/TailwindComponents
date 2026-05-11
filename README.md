@@ -1,6 +1,15 @@
 # Librería de Componentes React
 
-Una librería de componentes React moderna y configurable construida con TypeScript, Tailwind CSS y Storybook.
+Una librería de componentes moderna y configurable construida con TypeScript, Tailwind CSS, Radix UI y Ladle.
+
+## Características Principales
+
+- **React** - Componentes React con toda la funcionalidad
+- **TypeScript** - Tipado completo
+- **Tailwind CSS** - Estilos utilitarios
+- **Radix UI** - Componentes accesibles base
+- **Ladle** - Documentación interactiva rápida (alternativa a Storybook)
+- **Accesibilidad WCAG 2.1** - Componentes accesibles por defecto
 
 ## Instalación
 
@@ -10,23 +19,63 @@ npm install libreria-componentes
 
 ## Uso Rápido
 
+### React
+
 ```tsx
-// 1. Importar estilos (importante: esto habilita los estilos de los componentes)
+// 1. Importar estilos
 import 'libreria-componentes/style.css';
 
-// 2. Importar los componentes que necesitas
-import { Button, ErrorBoundary } from 'libreria-componentes';
+// 2. Importar componentes
+import { Button, TextField, Select } from 'libr';
 
-function App() {
+function App()eria-componentes {
   return (
-    // ErrorBoundary captura errores en los componentes hijos
-    <ErrorBoundary>
+    <div>
       <Button variant="default" size="lg">
         Click me
       </Button>
-    </ErrorBoundary>
+
+      <TextField
+        label="Email"
+        placeholder="Enter your email"
+      />
+
+      <Select
+        options={[
+          { value: 'react', label: 'React' },
+          { value: 'vue', label: 'Vue' }
+        ]}
+        placeholder="Select..."
+      />
+    </div>
   );
 }
+```
+
+### Vue
+
+```vue
+<script setup lang="ts">
+import { Button, TextField, Select } from 'libreria-componentes';
+// o
+import { Button, TextField, Select } from 'libreria-componentes/vue';
+</script>
+
+<template>
+  <div>
+    <Button variant="default" size="lg"> Click me </Button>
+
+    <TextField label="Email" placeholder="Enter your email" />
+
+    <Select
+      :options="[
+        { value: 'react', label: 'React' },
+        { value: 'vue', label: 'Vue' },
+      ]"
+      placeholder="Select..."
+    />
+  </div>
+</template>
 ```
 
 ## Documentación
@@ -36,58 +85,74 @@ function App() {
 | Documento                                      | Descripción                                                             |
 | ---------------------------------------------- | ----------------------------------------------------------------------- |
 | [docs/architecture.md](docs/architecture.md)   | Arquitectura, estructura del proyecto y cómo agregar nuevos componentes |
-| [docs/storybook.md](docs/storybook.md)         | Configuración de Storybook y cómo crear stories                         |
+| [docs/ladle.md](docs/ladle.md)                 | Configuración de Ladle y cómo crear stories                             |
 | [docs/styling.md](docs/styling.md)             | Sistema de theming, variables CSS y personalización                     |
 | [docs/accessibility.md](docs/accessibility.md) | Librerías de accesibilidad y mejores prácticas WCAG                     |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md)         | Historial de cambios y versiones                                        |
 
-### 🎨 Storybook
+### 🎨 Documentación Interactiva
 
-La documentación interactiva de componentes está disponible en Storybook.
+La documentación visual de componentes está disponible en Ladle.
 
 ```bash
 npm run dev
 ```
 
-Abre [http://localhost:6006](http://localhost:6006) para ver:
+Abre [http://localhost:61000](http://localhost:61000) para ver:
 
 - Todos los componentes con ejemplos interactivos
 - Controles para probar variantes y props
-- Verificación automática de accesibilidad
+- Preview en tiempo real
 
 ## Scripts
 
 ```bash
-npm run dev        # Iniciar Storybook
-npm run build      # Build de la librería
-npm run test       # Ejecutar tests
-npm run lint       # Linting
-npm run format     # Formatear código
-npm run release    # Crear release
+npm run dev           # Iniciar Ladle
+npm run build         # Build de la librería
+npm run build:ladle   # Build estático de Ladle
+npm run test          # Ejecutar tests
+npm run lint          # Linting
+npm run format        # Formatear código
+npm run release       # Crear release
 ```
 
-## Características
+## Componentes Disponibles
 
-- **TypeScript** - Tipado completo (evita errores antes de ejecutar)
-- **Tailwind CSS** - Estilos utilitarios (clases como `p-4`, `bg-blue-500`)
-- **Accesibilidad WCAG 2.1** - Componentes accesibles por defecto
-- **40+ variantes de Button** - Diferentes estilos (primary, secondary, destructive, etc.)
-- **Modo oscuro** - Cambio automático de colores según el tema del sistema
-- **Testing** - Vitest + React Testing Library + axe-core (pruebas de accesibilidad)
-- **Conventional Commits** - Changelog automático basado en mensajes de commit
+| Componente    | Descripción                          |
+| ------------- | ------------------------------------ |
+| Button        | Botón con variantes y estados        |
+| TextField     | Campo de texto con validación        |
+| Select        | Selector desplegable                 |
+| DropdownMenu  | Menú desplegable                     |
+| Container     | Contenedor responsive                |
+| ErrorBoundary | Captura errores en componentes hijos |
+
+## Cómo Funciona
+
+Los componentes están en la carpeta `src/components/` y usan:
+
+- **React** - Renderizado de componentes
+- **Radix UI** - Componentes base accesibles
+- **Tailwind CSS** - Estilos con variables CSS
+  └── vue/
+  └── components/Button.vue ← Generado para Vue
+
+````
+
+### Beneficios
+
+1. **Código único** - Mantén una sola versión de cada componente
+2. **Consistencia** - Comportamiento idéntico en React y Vue
+3. **Mantenimiento simple** - Cambios en un solo lugar
+4. **TypeScript** - Tipado completo en ambos frameworks
 
 ## Librerías de Referencia
 
-Esta librería fue inspirada y diseñada tomando como referencia las siguientes librerías líderes en el ecosistema de Tailwind CSS:
-
-| Librería                | Descripción                                                                      | Enlace                                                   |
-| ----------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| **shadcn/ui**           | Componentes accesibles y personalizables construidos con Radix UI y Tailwind     | [shadcn.com](https://ui.shadcn.com)                      |
-| **Tailwind UI**         | Componentes profesionales de Tailwind CSS creados por el equipo de Tailwind Labs | [tailwindui.com](https://tailwindui.com)                 |
-| **daisyUI**             | Componentes Tailwind CSS más populares y ligeros                                 | [daisyui.com](https://daisyui.com)                       |
-| **Flowbite**            | Componentes de código abierto construidos con Tailwind CSS                       | [flowbite.com](https://flowbite.com)                     |
-| **HyperUI**             | Colección gratuita de componentes Tailwind CSS                                   | [hyperui.dev](https://hyperui.dev)                       |
-| **Tailwind Components** | Repositorio comunitario de componentes Tailwind                                  | [tailwindcomponents.com](https://tailwindcomponents.com) |
+| Librería      | Descripción                                                                  | Enlace                                           |
+| ------------- | ---------------------------------------------------------------------------- | ------------------------------------------------ |
+| **shadcn/ui** | Componentes accesibles y personalizables construidos con Radix UI y Tailwind | [shadcn.com](https://ui.shadcn.com)              |
+| **Radix UI**  | Componentes primitivos accesibles                                            | [radix-ui.com](https://www.radix-ui.com)         |
+| **Ladle**     | Alternativa rápida a Storybook                                               | [ladle.dev](https://ladle.dev)                   |
 
 ## Requisitos
 
@@ -107,12 +172,12 @@ Usa **Conventional Commits** para las contribuciones:
 git commit -m "feat: add new component"     # Nueva funcionalidad
 git commit -m "fix: resolve bug"           # Corregir error
 git commit -m "docs: update documentation" # Actualizar docs
-```
+````
 
 Ejecuta `npm run release` para generar el changelog automáticamente.
 
 ## Primeros Pasos para Nuevos Desarrolladores
 
 1. **npm install** - Instala las dependencias
-2. **npm run dev** - Inicia Storybook para ver los componentes
+2. **npm run dev** - Inicia Ladle para ver los componentes
 3. Explora los ejemplos en la sección de docs para entender cómo funciona cada cosa

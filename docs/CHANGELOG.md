@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- [START CHANGELOG] -->
 
+## [1.2.0] - 2026-02-13
+
+### Added
+
+- **Prompt para creación de componentes con IA** (`prompts/create-component.md`): Nuevo sistema de prompts para generar componentes automáticamente siguiendo los patrones de la librería
+- **Documentación de IA en arquitectura** (`docs/architecture.md`): Nueva sección "Opción 2: Con IA (Recomendado)" con guía paso a paso para usar el prompt
+- **Referencia en README.md**: Nueva sección sobre cómo usar el prompt con IA
+
+<!-- [END CHANGELOG] -->
+
 ## [1.1.0] - 2026-02-13
 
 ### Added

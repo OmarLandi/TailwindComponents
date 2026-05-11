@@ -1,0 +1,139 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# Librería de Componentes
+
+Una librería de componentes React moderna y accesible construida con las mejores prácticas de desarrollo.
+
+---
+
+## Tecnologías
+
+| Tecnología       | Propósito                         |
+| ---------------- | --------------------------------- |
+| **React 18**     | Biblioteca de UI                  |
+| **TypeScript**   | Tipado estático estricto          |
+| **Tailwind CSS** | Estilos con variables CSS         |
+| **CVA**          | Variantes de componentes          |
+| **Radix UI**     | Componentes primitivos accesibles |
+| **Storybook**    | Documentación interactiva         |
+| **Vitest**       | Testing unitario                  |
+| **axe-core**     | Pruebas de accesibilidad          |
+| **lucide-react** | Iconos                            |
+
+---
+
+## Requerimientos
+
+### Dependencias necesarias
+
+```bash
+npm install react react-dom
+```
+
+### Instalación de la librería
+
+```bash
+npm install libreria-componentes
+```
+
+### Configuración Tailwind
+
+Asegúrate de tener Tailwind configurado con las variables CSS del theme:
+
+```javascript
+// tailwind.config.js
+export default {
+  content: ['./node_modules/libreria-componentes/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        // ... más colores
+      },
+    },
+  },
+  plugins: [],
+};
+```
+
+### CSS Variables
+
+Añade las variables CSS a tu archivo CSS principal:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+```
+
+### Uso básico
+
+```tsx
+import { Button, ThemeProvider } from 'libreria-componentes';
+import 'libreria-componentes/dist/style.css';
+
+function App() {
+  return (
+    <ThemeProvider defaultColorMode="light" defaultPalette="neutral">
+      <Button>Hola Mundo</Button>
+    </ThemeProvider>
+  );
+}
+```
+
+---
+
+## Accesibilidad
+
+Todos los componentes cumplen con WCAG 2.1 nivel AA:
+
+- Soporte completo de teclado
+- Roles ARIA apropiados
+- Contraste de colores verificado
+- Screen reader compatible

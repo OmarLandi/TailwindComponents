@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import axe from 'axe-core';
+import '@testing-library/jest-dom/vitest';
 import { Button } from '../src/components/Button';
 
 describe('Button', () => {
@@ -23,10 +24,10 @@ describe('Button', () => {
 
   it('renders with different sizes', () => {
     const { rerender } = render(<Button size="sm">Small</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-8');
+    expect(screen.getByRole('button')).toHaveClass('h-9');
 
     rerender(<Button size="lg">Large</Button>);
-    expect(screen.getByRole('button')).toHaveClass('h-12');
+    expect(screen.getByRole('button')).toHaveClass('h-11');
 
     rerender(<Button size="xl">XL</Button>);
     expect(screen.getByRole('button')).toHaveClass('h-14');
@@ -72,15 +73,15 @@ describe('Button', () => {
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('supports ariaLabel prop', () => {
-    render(<Button ariaLabel="Close dialog">×</Button>);
+  it('supports aria-label prop', () => {
+    render(<Button aria-label="Close dialog">×</Button>);
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Close dialog');
   });
 
   it('supports responsive sizes', () => {
-    render(<Button sizeResponsive={{ base: 'sm', lg: 'lg' }}>Responsive</Button>);
+    render(<Button responsiveSize="h-9 px-3 text-xs lg:h-11 lg:px-8">Responsive</Button>);
     const button = screen.getByRole('button');
-    expect(button).toHaveClass('h-8', 'lg:h-12');
+    expect(button).toHaveClass('h-9', 'lg:h-11');
   });
 
   it('should have no accessibility violations', async () => {

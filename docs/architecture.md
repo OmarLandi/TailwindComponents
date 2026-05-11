@@ -448,6 +448,8 @@ chore: update dependencies
 
 ## Agregar Nuevo Componente
 
+### Opción 1: Manual
+
 1. **Crear carpeta:**
 
    ```bash
@@ -505,6 +507,72 @@ chore: update dependencies
 
    - New `NuevoComponente` component
    ```
+
+### Opción 2: Con IA (Recomendado)
+
+Esta librería incluye un **prompt especializado** para crear componentes de forma asistida por IA.
+
+#### ¿Qué es el prompt?
+
+El archivo `prompts/create-component.md` contiene instrucciones detalladas para que una IA cree componentes siguiendo los patrones y buenas prácticas del proyecto.
+
+#### ¿Cómo usar el prompt con una IA?
+
+1. **Copia el contenido del archivo** `prompts/create-component.md`
+
+2. **Pégalo en tu IA favorita** (ChatGPT, Claude, Gemini, etc.)
+
+3. **Indica qué componente quieres crear** - por ejemplo:
+
+   > "Quiero crear un componente Card"
+
+4. **La IA te hará preguntas** sobre:
+   - Propósito del componente
+   - Variantes necesarias
+   - Props requeridas
+   - Estados especiales
+   - Requisitos de responsive
+
+5. **La IA creará automáticamente:**
+   - Componente en `src/components/Nombre/Nombre.tsx`
+   - Archivo de export en `src/components/Nombre/index.ts`
+   - Story en `stories/Nombre.stories.tsx`
+   - Tests en `tests/Nombre.test.tsx`
+   - Actualizará `src/components/index.ts`
+
+#### Beneficios de usar el prompt con IA
+
+- ✅ Sigue automáticamente los patrones establecidos
+- ✅ Genera código TypeScript con tipos completos
+- ✅ Incluye accesibilidad WCAG 2.1
+- ✅ Soporta modo oscuro
+- ✅ Crea Storybook y tests
+- ✅ Questions clarificadoras para entender requisitos
+
+#### Ejemplo de conversación
+
+```
+Usuario: Quiero crear un componente Modal
+IA: Perfecto! Para crear el componente Modal, necesito hacerte algunas preguntas:
+
+1. ¿Qué variantes de estilo debería tener? (ej: default, destructive, con/sin overlay)
+2. ¿Qué tamaños? (sm, md, lg, xl, fullscreen)
+3. ¿Qué props necesita? (isOpen, onClose, title, children, etc.)
+4. ¿Necesita animaciones? (fade, scale, slide)
+5. ¿Debe cerrar al hacer click fuera? (backdrop click)
+6. ¿Debe cerrar con ESC? (keyboard escape)
+7. ¿Necesita focus trap? (bloquear foco dentro del modal)
+
+Usuario: variant default y destructive, tamaños sm/lg, props: isOpen, onClose, title, children, closeOnBackdropClick=true, closeOnEscape=true, animate=true
+
+IA: Perfecto! Voy a crear el componente Modal siguiendo los patrones del proyecto...
+```
+
+#### Notas importantes
+
+- **Revisa siempre el código generado** - la IA puede cometer errores
+- **Los prompts están en inglés** - si prefieres español, adapta el prompt
+- **Puedes modificar el prompt** según tus necesidades específicas
 
 ## Mejores Prácticas
 

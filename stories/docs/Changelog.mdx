@@ -1,0 +1,116 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Changelog" />
+
+# Changelog
+
+Todos los cambios notables de este proyecto se documentarán en este archivo.
+
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
+
+---
+
+## [1.0.0] - 2026-02-20
+
+### Added
+
+#### Componentes
+
+- **Button**: Botón versatile con múltiples variantes (default, destructive, secondary, accent, outline, ghost, link), tamaños (sm, default, lg, icon), estados (loading, disabled), y soporte para iconos.
+- **Container**: Contenedor responsive con diferentes tamaños (xs, sm, md, lg, xl, 2xl, full), opciones de padding y soporte para fluido.
+- **DropdownMenu**: Menú desplegable basado en Radix UI con soporte para items, checkboxes, radios, labels y separadores.
+- **Select**: Selector basado en Radix UI con opciones de tamaño, labels, separadores, texto de ayuda y errores.
+- **TextField**: Campo de texto con label, helper text, mensajes de error, iconos y variantes (default, filled, ghost, underlined).
+- **ErrorBoundary**: Componente para capturar errores de React y mostrar un fallback.
+- **ThemeToggle**: Botón para alternar entre modo claro y oscuro.
+- **ThemeProvider**: Proveedor de tema global con soporte para light/dark mode y múltiples paletas de color.
+
+#### Paletas de Colores
+
+13 paletas de colores disponibles:
+
+- neutral, stone, zinc, slate (escalas grises)
+- violet, rose, orange (colores cálidos)
+- emerald, blue, green (colores fríos)
+- red, indigo (colores intensos)
+- amber, cyan (colores especiales)
+
+#### Sistema de Temas
+
+- ThemeProvider con hook useTheme
+- Soporte para light/dark mode
+- Persistencia en localStorage
+- 13 paletas de colores
+- Variables CSS dinámicas
+
+#### Documentación
+
+- Storybook con autodocs
+- Stories para todos los componentes
+- Documentación de props
+- Ejemplos interactivos
+
+#### Testing
+
+- Tests con Vitest
+- Pruebas de accesibilidad con axe-core
+- Tests para todos los componentes
+
+---
+
+### Dependencies Updated
+
+| Paquete                       | Versión Anterior | Nueva Versión |
+| ----------------------------- | ---------------- | ------------- |
+| storybook                     | -                | 8.6.17        |
+| @storybook/react              | -                | 8.6.17        |
+| @storybook/react-vite         | -                | 8.6.17        |
+| @storybook/addon-essentials   | 8.6.14           | 8.6.17        |
+| @storybook/addon-interactions | 8.6.14           | 8.6.17        |
+| @storybook/addon-links        | -                | 8.6.17        |
+| @storybook/addon-a11y         | -                | 8.6.17        |
+| @storybook/addon-themes       | -                | 8.6.17        |
+| @storybook/test               | 8.6.15           | 8.6.17        |
+| @storybook/blocks             | -                | 8.6.17        |
+
+---
+
+## Notas de Desarrollo
+
+### Estructura del Proyecto
+
+```
+src/
+├── components/
+│   ├── Button/
+│   │   ├── Button.tsx
+│   │   └── index.ts
+│   ├── Container/
+│   ├── DropdownMenu/
+│   ├── ErrorBoundary/
+│   ├── Select/
+│   ├── TextField/
+│   ├── Themes/
+│   │   ├── ThemeProvider.tsx
+│   │   ├── Themes.tsx
+│   │   ├── palettes.ts
+│   │   ├── types.ts
+│   │   ├── useTheme.ts
+│   │   └── index.ts
+│   └── index.ts
+├── lib/
+│   └── utils.ts
+├── index.ts
+└── index.css
+```
+
+### Tecnologías
+
+- React 18
+- TypeScript (strict mode)
+- Tailwind CSS
+- CVA (class-variance-authority)
+- Radix UI
+- Vitest
+- Storybook 8.6.17
+- lucide-react

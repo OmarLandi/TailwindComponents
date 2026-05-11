@@ -1,0 +1,161 @@
+import type { Theme, ThemeColors } from './types';
+
+const baseColors: ThemeColors = {
+  background: 'hsl(0 0% 100%)',
+  foreground: 'hsl(222.2 84% 4.9%)',
+  card: 'hsl(0 0% 100%)',
+  cardForeground: 'hsl(222.2 84% 4.9%)',
+  popover: 'hsl(0 0% 100%)',
+  popoverForeground: 'hsl(222.2 84% 4.9%)',
+  primary: 'hsl(222.2 47.4% 11.2%)',
+  primaryForeground: 'hsl(210 40% 98%)',
+  secondary: 'hsl(210 40% 96.1%)',
+  secondaryForeground: 'hsl(222.2 47.4% 11.2%)',
+  muted: 'hsl(210 40% 96.1%)',
+  mutedForeground: 'hsl(215.4 16.3% 46.9%)',
+  accent: 'hsl(210 40% 96.1%)',
+  accentForeground: 'hsl(222.2 47.4% 11.2%)',
+  destructive: 'hsl(0 84.2% 60.2%)',
+  destructiveForeground: 'hsl(210 40% 98%)',
+  warning: 'hsl(45 93% 47%)',
+  warningForeground: 'hsl(0 0% 100%)',
+  success: 'hsl(142 76% 36%)',
+  successForeground: 'hsl(0 0% 100%)',
+  info: 'hsl(199 89% 48%)',
+  infoForeground: 'hsl(0 0% 100%)',
+  neutral: 'hsl(215 16% 47%)',
+  neutralForeground: 'hsl(0 0% 100%)',
+  border: 'hsl(214.3 31.8% 91.4%)',
+  input: 'hsl(214.3 31.8% 91.4%)',
+  ring: 'hsl(222.2 84% 4.9%)',
+  chart: {
+    1: 'hsl(12 76% 61%)',
+    2: 'hsl(173 58% 39%)',
+    3: 'hsl(197 37% 24%)',
+    4: 'hsl(43 74% 66%)',
+    5: 'hsl(27 87% 67%)',
+  },
+};
+
+const darkColors: ThemeColors = {
+  background: 'hsl(222.2 84% 4.9%)',
+  foreground: 'hsl(210 40% 98%)',
+  card: 'hsl(222.2 84% 4.9%)',
+  cardForeground: 'hsl(210 40% 98%)',
+  popover: 'hsl(222.2 84% 4.9%)',
+  popoverForeground: 'hsl(210 40% 98%)',
+  primary: 'hsl(210 40% 98%)',
+  primaryForeground: 'hsl(222.2 47.4% 11.2%)',
+  secondary: 'hsl(217.2 32.6% 17.5%)',
+  secondaryForeground: 'hsl(210 40% 98%)',
+  muted: 'hsl(217.2 32.6% 17.5%)',
+  mutedForeground: 'hsl(215 20.2% 65.1%)',
+  accent: 'hsl(217.2 32.6% 17.5%)',
+  accentForeground: 'hsl(210 40% 98%)',
+  destructive: 'hsl(0 62.8% 30.6%)',
+  destructiveForeground: 'hsl(210 40% 98%)',
+  warning: 'hsl(38 92% 50%)',
+  warningForeground: 'hsl(0 0% 0%)',
+  success: 'hsl(142 70% 25%)',
+  successForeground: 'hsl(0 0% 100%)',
+  info: 'hsl(199 86% 35%)',
+  infoForeground: 'hsl(0 0% 100%)',
+  neutral: 'hsl(215 20% 65%)',
+  neutralForeground: 'hsl(0 0% 0%)',
+  border: 'hsl(217.2 32.6% 17.5%)',
+  input: 'hsl(217.2 32.6% 17.5%)',
+  ring: 'hsl(212.7 26.8% 83.9%)',
+  chart: {
+    1: 'hsl(220 70% 50%)',
+    2: 'hsl(160 60% 45%)',
+    3: 'hsl(30 80% 55%)',
+    4: 'hsl(280 65% 60%)',
+    5: 'hsl(340 75% 55%)',
+  },
+};
+
+export const defaultLightTheme: Theme = {
+  colors: baseColors,
+  typography: {
+    fonts: {
+      body: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      heading: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      monospace: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace',
+    },
+    fontSizes: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+    },
+    fontWeights: {
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+    },
+    lineHeights: {
+      tight: 1.25,
+      normal: 1.5,
+      relaxed: 1.625,
+    },
+    letterSpacings: {
+      tight: '-0.025em',
+      normal: '0',
+      wide: '0.025em',
+    },
+  },
+  spacing: {
+    0: '0',
+    1: '0.25rem',
+    2: '0.5rem',
+    3: '0.75rem',
+    4: '1rem',
+    5: '1.25rem',
+    6: '1.5rem',
+    8: '2rem',
+    10: '2.5rem',
+    12: '3rem',
+    16: '4rem',
+    20: '5rem',
+    24: '6rem',
+    32: '8rem',
+    40: '10rem',
+    48: '12rem',
+    56: '14rem',
+    64: '16rem',
+  },
+  radii: {
+    sm: '0.25rem',
+    md: '0.5rem',
+    lg: '0.75rem',
+    xl: '1rem',
+    full: '9999px',
+  },
+  shadows: {
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+    md: '0 4px 6px -1 rgb(0 0 0 / 0.1), 0 2px 4px -2 rgb(0 0 0 / 0.1)',
+    lg: '0 10px 15px -3 rgb(0 0 0 / 0.1), 0 4px 6px -4 rgb(0 0 0 / 0.1)',
+    xl: '0 20px 25px -5 rgb(0 0 0 / 0.1), 0 8px 10px -6 rgb(0 0 0 / 0.1)',
+  },
+  transition: {
+    duration: '200ms',
+    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+  radius: '0.5rem',
+};
+
+export const defaultDarkTheme: Theme = {
+  ...defaultLightTheme,
+  colors: darkColors,
+};
+
+export const getTheme = (colorMode: 'light' | 'dark'): Theme => {
+  return colorMode === 'dark' ? defaultDarkTheme : defaultLightTheme;
+};
+
+export { baseColors, darkColors };

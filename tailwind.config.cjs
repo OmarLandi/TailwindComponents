@@ -1,10 +1,29 @@
+const tailwindcssAnimate = require('tailwindcss-animate');
+
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   darkMode: ['class'],
   content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './stories/**/*.{js,jsx,ts,tsx}',
-    './components/**/*.{js,jsx,ts,tsx}',
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    './stories/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './.ladle/**/*.{js,ts,jsx,tsx}',
+  ],
+  safelist: [
+    'theme-neutral',
+    'theme-stone',
+    'theme-zinc',
+    'theme-slate',
+    'theme-violet',
+    'theme-rose',
+    'theme-orange',
+    'theme-emerald',
+    'theme-blue',
+    'theme-red',
+    'theme-indigo',
+    'theme-amber',
+    'theme-cyan',
   ],
   theme: {
     container: {
@@ -87,5 +106,5 @@ export default {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [tailwindcssAnimate],
 };

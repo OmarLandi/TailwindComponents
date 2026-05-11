@@ -8,80 +8,95 @@ const meta: Meta<typeof Button> = {
   parameters: {
     docs: {
       description: {
-        component: `El componente **Button** es un elemento interactivo fundamental que permite a los usuarios ejecutar acciones dentro de la aplicación. Proporciona una experiencia de usuario consistente y accesible, con múltiples variantes visuales, tamaños y estados para adaptarse a diferentes contextos de la interfaz.
+        component: `A versatile button component with support for variants, sizes, icons, loading states, and responsive sizing.
 
-**Propósito:**
-- Acciones principales: enviar formularios, confirmar decisiones o ejecutar operaciones
-- Navegación: dirigir al usuario a otras páginas o secciones (usando \`asChild\`)
-- Acciones destructivas: eliminar, cancelar o revertir operaciones
-- Estados de carga: indicar que una operación está en progreso
+## Basic usage
 
-**Características:**
-- Más de 40 variantes visuales (sólidas, outline, ghost, soft, 3D, gradient, glass, etc.)
-- Múltiples tamaños (xs, sm, default, lg, xl, icon)
-- Estados: disabled, loading, fullWidth
-- Soporte para iconos a izquierda/derecha
-- Composición con otros componentes (asChild)
-- Accesibilidad WCAG 2.1 completa`,
+\`\`\`tsx
+import { Button } from 'libreriacomponentes';
+
+<Button variant="default" size="default">
+  Click me
+</Button>
+\`\`\`
+
+## Variants
+
+\`\`\`tsx
+<Button variant="default">Default</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="accent">Accent</Button>
+<Button variant="destructive">Destructive</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="link">Link</Button>
+\`\`\`
+
+## Sizes
+
+\`\`\`tsx
+<Button size="sm">Small</Button>
+<Button size="default">Default</Button>
+<Button size="lg">Large</Button>
+<Button size="xl">XL</Button>
+<Button size="icon">+</Button>
+\`\`\`
+
+## Loading state
+
+\`\`\`tsx
+<Button isLoading>Loading</Button>
+\`\`\`
+
+## Full width
+
+\`\`\`tsx
+<Button fullWidth>Full Width Button</Button>
+\`\`\`
+
+## Icons
+
+\`\`\`tsx
+<Button leftIcon={<SearchIcon />}>Search</Button>
+<Button rightIcon={<ArrowRight />}>Next</Button>
+\`\`\`
+
+## As child (composition with Radix)
+
+\`\`\`tsx
+<Button asChild>
+  <a href="/page">Link as Button</a>
+</Button>
+\`\`\``,
       },
     },
   },
   argTypes: {
     variant: {
       control: 'select',
-      description: 'Variante de estilo del botón',
+      options: ['default', 'destructive', 'secondary', 'accent', 'outline', 'ghost', 'link'],
     },
     size: {
       control: 'select',
-      description: 'Tamaño del botón',
+      options: ['sm', 'default', 'lg', 'xl', 'icon'],
     },
-    fullWidth: {
-      control: 'boolean',
-      description: 'Ocupa todo el ancho disponible',
-    },
-    asChild: {
-      control: 'boolean',
-      description: 'Usa Slot de Radix UI',
-    },
-    disabled: {
-      control: 'boolean',
-      description: 'Botón deshabilitado',
-    },
-    isLoading: {
-      control: 'boolean',
-      description: 'Muestra estado de carga',
-    },
-    leftIcon: {
-      control: 'object',
-      description: 'Icono a la izquierda',
-    },
-    rightIcon: {
-      control: 'object',
-      description: 'Icono a la derecha',
-    },
-    onClick: {
-      action: 'clicked',
-      description: 'Función callback al hacer click',
-    },
-    ariaLabel: {
-      control: 'text',
-      description: 'Etiqueta accesible para lectores de pantalla (para botones con solo icono)',
-    },
-    sizeResponsive: {
-      control: 'object',
-      description: 'Tamaños responsive para diferentes breakpoints (base, sm, md, lg, xl)',
-    },
-    children: {
-      control: 'text',
-      description: 'Contenido del botón',
-    },
+    fullWidth: { control: 'boolean' },
+    asChild: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    isLoading: { control: 'boolean' },
+    leftIcon: { control: 'object' },
+    rightIcon: { control: 'object' },
+    onClick: { action: 'clicked' },
+    'aria-label': { control: 'text' },
+    responsiveSize: { control: 'text' },
+    children: { control: 'text' },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-export const Default: Story = {
+export const Playground: Story = {
   args: {
     children: 'Button',
     variant: 'default',

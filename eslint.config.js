@@ -41,6 +41,17 @@ export default tseslint.config(
     },
   },
   {
+    files: ['**/*.cjs'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
     ignores: ['node_modules', 'dist', 'storybook-static', '.husky', '*.config.js', '*.config.ts'],
   }
 );

@@ -1,96 +1,24 @@
-# Documentación de Estilado y CSS
+# Estilado y Theming
 
-## Visión General
+## Visión general
 
-Esta librería utiliza un enfoque de **CSS utility-first** con Tailwind CSS, combinado con un sistema de variables CSS para theming flexible.
+La librería combina **Tailwind CSS** (utility-first), **variables CSS** (theming en runtime) y **CVA** (variantes tipadas). Los componentes nunca usan colores hardcodeados: siempre referencian variables del tema (`bg-primary`, `text-foreground`, `border-border`, ...).
 
-## Librerías de Estilado
+## Librerías
 
-### Tailwind CSS
+| Librería                   | Versión | Uso                                            |
+| -------------------------- | ------- | ---------------------------------------------- |
+| `tailwindcss`              | ^3.4.17 | Utilidades y mapeo de CSS variables            |
+| `tailwindcss-animate`      | ^1.0.7  | Animaciones (`animate-in`, `accordion-*`, ...) |
+| `tailwind-merge`           | ^2.6.0  | Resolución de conflictos de clases             |
+| `clsx`                     | ^2.1.1  | Composición condicional de clases              |
+| `class-variance-authority` | ^0.7.1  | Definición de variantes                        |
 
-**Propósito:** Framework CSS utility-first para estilado rápido.
+> `tailwind.config.cjs` es CommonJS (`.cjs`) porque el proyecto es ESM (`"type": "module"`).
 
-**Versión:** ^3.4.17
+## `cn()` — utilidad principal
 
-**Configuración:** `tailwind.config.js`
-
-```js
-export default {
-  darkMode: ['class'],
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
-  theme: {
-    extend: {
-      colors: {
-        primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
-        // ... más colores
-      },
-    },
-  },
-  plugins: [require('tailwindcss-animate')],
-};
-```
-
-### tailwindcss-animate
-
-**Propósito:** Plugin que agrega utilidades de animación a Tailwind.
-
-**Versión:** ^1.0.7
-
-**Características:**
-
-- Animaciones predefinidas (`animate-spin`, `animate-pulse`, etc.)
-- Clases para animaciones de accordion
-- Soporte para keyframes personalizados
-
-### tailwind-merge
-
-**Propósito:** Merge de clases Tailwind sin conflictos.
-
-**Versión:** ^3.4.0
-
-**Uso:**
-
-```tsx
-import { twMerge } from 'tailwind-merge';
-
-// Merge de clases
-twMerge('px-2 py-2', 'p-4'); // → 'p-4'
-```
-
-### clsx
-
-**Propósito:** Constructora de className condicional.
-
-**Versión:** ^2.1.1
-
-**Uso:**
-
-```tsx
-import { clsx } from 'clsx';
-
-clsx('foo', true && 'bar', 'baz'); // → 'foo bar baz'
-```
-
-### cn - Utilidad Principal ( IMPORTANTE)
-
-Esta es una de las funciones más importantes de la librería. Sirve para combinar clases de Tailwind sin conflictos.
-
-**Problema sin cn():**
-
-```tsx
-// Esto puede causar conflictos
-className={'p-4 ' + (isLarge ? 'p-8' : 'p-2')}
-```
-
-**Solución con cn():**
-
-```tsx
-// cn() resuelve conflictos automáticamente
-className={cn('p-4', isLarge ? 'p-8' : 'p-2')}
-// resultado: 'p-8' (se queda con el último valor)
-```
-
-```tsx
+```ts
 // src/lib/utils.ts
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -100,215 +28,164 @@ export function cn(...inputs: ClassValue[]) {
 }
 ```
 
-**Uso en componentes:**
-
 ```tsx
-import { cn } from '@/lib/utils';
+// 'p-4' y 'p-8' entran en conflicto: gana el último
+className={cn('p-4', isLarge && 'p-8')} // → 'p-8'
 
-<button
-  className={cn(
-    'base-classes',
-    variant === 'primary' && 'bg-primary text-white',
-    className // permite override
-  )}
-/>;
+// El className del consumidor siempre va al final para permitir override
+className={cn('base-classes', variantClasses, className)}
 ```
 
-### class-variance-authority (CVA)
-
-**Propósito:** Sistema de variantes para componentes.
-
-**Versión:** ^0.7.1
-
-**Uso:**
+## CVA
 
 ```tsx
 import { cva, type VariantProps } from 'class-variance-authority';
 
-const buttonVariants = cva('base-classes', {
-  variants: {
-    variant: {
-      default: 'bg-primary text-white',
-      secondary: 'bg-secondary text-secondary-foreground',
-    },
-    size: {
-      sm: 'h-8 px-3',
-      default: 'h-10 px-4',
-      lg: 'h-12 px-8',
-    },
-  },
-  defaultVariants: {
-    variant: 'default',
-    size: 'default',
-  },
-});
-
-type ButtonProps = VariantProps<typeof buttonVariants>;
-```
-
-## Sistema de Temas
-
-### Variables CSS
-
-El archivo `src/index.css` define variables CSS para theming:
-
-```css
-@layer base {
-  :root {
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    /* ... */
-  }
-
-  .dark {
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    /* ... */
-  }
-}
-```
-
-### Colores Disponibles
-
-| Variable        | Uso                            | Modo Oscuro |
-| --------------- | ------------------------------ | ----------- |
-| `--primary`     | Color principal de la marca    | Invertido   |
-| `--secondary`   | Color secundario               | Invertido   |
-| `--destructive` | Acciones destructivas (borrar) | Ajustado    |
-| `--warning`     | Advertencias                   | Ajustado    |
-| `--success`     | Mensajes exitosos              | Ajustado    |
-| `--info`        | Información                    | Ajustado    |
-| `--neutral`     | Color neutro                   | Ajustado    |
-| `--accent`      | Color de acento                | Invertido   |
-| `--background`  | Fondo principal                | Invertido   |
-| `--foreground`  | Texto principal                | Invertido   |
-| `--muted`       | Elementos silenciados          | Invertido   |
-| `--border`      | Bordes                         | Ajustado    |
-
-## Personalización de Temas
-
-### Override de Colores
-
-```css
-/* En tu CSS */
-:root {
-  --primary: 250 84% 54%; /* Violeta */
-  --primary-foreground: 0 0% 100%;
-}
-```
-
-### Agregar Nuevos Colores
-
-```js
-// tailwind.config.js
-export default {
-  theme: {
-    extend: {
-      colors: {
-        brand: {
-          DEFAULT: 'hsl(var(--brand))',
-          foreground: 'hsl(var(--brand-foreground))',
-        },
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+      },
+      size: {
+        sm: 'h-9 px-3 text-xs',
+        default: 'h-10 px-4 py-2',
+        lg: 'h-11 px-8',
       },
     },
-  },
-};
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {}
 ```
 
-```css
-:root {
-  --brand: 250 84% 54%;
-  --brand-foreground: 0 0% 100%;
-}
+Reglas:
+
+- Usa CVA **solo** cuando existan variantes reales. Un componente con una sola apariencia usa una constante de string.
+- Nombres de variantes estándar: `default`, `secondary`, `outline`, `ghost`, `destructive`, `link`.
+- Tamaños estándar: `sm`, `default`, `lg` (y `icon`/`xl` solo si aportan valor).
+- No redeclares `variant`/`size` en la interfaz: `VariantProps` ya los tipa.
+- Máximo ~6-8 variantes por eje; evita `soft-*`, `3d-*`, `glass-*`.
+
+## Sistema de theming
+
+### Flujo
+
+```
+palettes.ts / defaultTheme.ts        (colores con hsl(...))
+            │
+            ▼
+       ThemeProvider                 (genera variables CSS y aplica clase theme-*)
+            │
+            ▼
+      tailwind.config.cjs            (hsl(var(--background)))
+            │
+            ▼
+      Componentes                    (bg-background, text-foreground, ...)
 ```
 
-## Utilidades de Estilado
+### Regla crítica: HSL crudo vs `hsl()`
 
-### Animaciones
+- `tailwind.config.cjs` define `background: 'hsl(var(--background))'`.
+- Por tanto, **la variable debe contener HSL crudo**: `--background: 0 0% 100%;`.
+- Si guardas `hsl(...)` en la variable, el resultado es `hsl(hsl(...))`, que es **CSS inválido**.
+- `defaultTheme.ts` y `palettes.ts` escriben los colores con `hsl(...)` porque `ThemeProvider` elimina el wrapper (`stripHsl`) antes de generar las variables.
+- En `src/index.css` los valores deben ir **sin** wrapper.
+
+### `ThemeProvider`
 
 ```tsx
-// Transiciones
-<button className="transition-all duration-200">...</button>
-
-// Animaciones predefinidas
-<button className="animate-spin">...</button>
-<button className="animate-pulse">...</button>
-
-// Animaciones personalizadas (agregadas via tailwindcss-animate)
-<button className="animate-accordion-down">...</button>
+<ThemeProvider
+  colorMode="dark" // 'light' | 'dark' (inicial; luego localStorage)
+  defaultPalette="violet" // una de las 13 paletas
+  defaultTheme={{ radius: '1rem' }} // overrides parciales
+  storageKey="theme-color-mode"
+  disableTransitionOnChange={false}
+>
+  <App />
+</ThemeProvider>
 ```
 
-### Estados
+El provider:
+
+1. Envuelve los children en `<div class="{colorMode} theme-{palette}">`.
+2. Genera las variables CSS del tema mergeado (base + paleta + overrides).
+3. Persiste el modo en `localStorage`.
+4. Expone `useTheme()`.
+
+### `useTheme()`
 
 ```tsx
-// Hover
-<button className="hover:bg-primary/90">...</button>
-
-// Focus
-<button className="focus-visible:ring-2 focus-visible:ring-ring">...</button>
-
-// Active/Pressed
-<button className="active:scale-[0.98]">...</button>
-
-// Disabled
-<button className="disabled:opacity-50 disabled:pointer-events-none">...</button>
+const { theme, colorMode, setColorMode, toggleColorMode, setTheme } = useTheme();
 ```
 
-## Mejores Prácticas
+Úsalo **solo** cuando necesites leer valores en JS (charts, estilos dinámicos). En CSS, usa clases Tailwind.
 
-### 1. Usa `cn()` para merge de clases
+### Paletas
+
+`neutral`, `stone`, `zinc`, `slate`, `violet`, `rose`, `orange`, `emerald`, `blue`, `red`, `indigo`, `amber`, `cyan`.
+
+Cada paleta define `colors.light` y `colors.dark` con **todos** los campos de `ThemeColors` (`background`, `foreground`, `card`, `popover`, `primary`, `secondary`, `muted`, `accent`, `destructive`, `warning`, `success`, `info`, `neutral`, `border`, `input`, `ring`, `chart.1..5` y sus `*Foreground`).
+
+### Añadir una paleta
+
+1. `src/components/Themes/palettes.ts`: añadir la entrada con `light` y `dark` completos.
+2. `src/components/Themes/types.ts`: añadir el nombre al union `PaletteName`.
+3. `src/index.css`: añadir `.theme-mipaleta { ... }` y `.dark .theme-mipaleta { ... }` con **HSL crudo**.
+4. `tailwind.config.cjs`: añadir `'theme-mipaleta'` al `safelist`.
+5. `.storybook/preview.tsx`: añadir la opción al toolbar `palette`.
+6. Añadir un test en `tests/Themes.test.tsx` si cambia el comportamiento del provider.
+
+## Variables disponibles
+
+| Variable                                     | Utilidad Tailwind                                          |
+| -------------------------------------------- | ---------------------------------------------------------- |
+| `--background` / `--foreground`              | `bg-background` / `text-foreground`                        |
+| `--card` / `--card-foreground`               | `bg-card` / `text-card-foreground`                         |
+| `--popover` / `--popover-foreground`         | `bg-popover` / `text-popover-foreground`                   |
+| `--primary` / `--primary-foreground`         | `bg-primary` / `text-primary-foreground`                   |
+| `--secondary` / `--secondary-foreground`     | `bg-secondary` / `text-secondary-foreground`               |
+| `--muted` / `--muted-foreground`             | `bg-muted` / `text-muted-foreground`                       |
+| `--accent` / `--accent-foreground`           | `bg-accent` / `text-accent-foreground`                     |
+| `--destructive` / `--destructive-foreground` | `bg-destructive` / `text-destructive-foreground`           |
+| `--success` / `--success-foreground`         | `bg-success` / `text-success-foreground`                   |
+| `--warning` / `--warning-foreground`         | `bg-warning` / `text-warning-foreground`                   |
+| `--info` / `--info-foreground`               | `bg-info` / `text-info-foreground`                         |
+| `--neutral` / `--neutral-foreground`         | `bg-neutral` / `text-neutral-foreground`                   |
+| `--border`, `--input`, `--ring`              | `border-border`, `border-input`, `ring-ring`               |
+| `--radius`                                   | `rounded-lg` (`var(--radius)`), `rounded-md`, `rounded-sm` |
+| `--chart-1` … `--chart-5`                    | Charts (uso en JS)                                         |
+
+## Estados estándar
 
 ```tsx
-// ✅ Correcto
-className={cn('base-classes', variantClasses, className)}
-
-// ❌ Evitar
-className={`base-classes ${variantClasses} ${className}`}
+'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+'disabled:pointer-events-none disabled:opacity-50';
+'transition-colors';
 ```
 
-### 2. Define variantes con CVA
+## Mejores prácticas
 
-```tsx
-// ✅ Correcto - usa CVA
-const componentVariants = cva('base-classes', {
-  variants: { variant: { ... } }
-});
+- ✅ `cn()` para merge; `className` del consumidor al final.
+- ✅ Variables del tema; nunca `bg-blue-500`, `#fff` o `rgb(...)`.
+- ✅ Escala de spacing de Tailwind (`p-4`, `gap-2`), sin valores arbitrarios salvo casos justificados.
+- ✅ `aria-hidden` en iconos decorativos.
+- ❌ No usar `style={{ color: ... }}` para colores del tema.
+- ❌ No duplicar clases de variantes fuera de CVA.
 
-// ❌ Evitar - hardcoded classes
-const variants = {
-  default: 'bg-blue-500',
-  secondary: 'bg-gray-500',
-};
-```
-
-### 3. Usa variables CSS para theming
-
-```tsx
-// ✅ Correcto
-className = 'bg-primary text-primary-foreground';
-
-// ❌ Evitar - valores hardcoded
-className = 'bg-blue-500 text-white';
-```
-
-### 4. Sigue la escala de spacing de Tailwind
-
-```tsx
-// ✅ Usa escalas consistentes
-className = 'p-4'; // 1rem = 16px
-className = 'gap-2'; // 0.5rem = 8px
-
-// ❌ Evita valores arbitrarios
-className = 'p-[13px]';
-```
+Ver también `AGENTS.md` → "Deuda técnica conocida" para las inconsistencias actuales del theming.
 
 ## Recursos
 
-- [Documentación Tailwind CSS](https://tailwindcss.com/docs)
-- [Tailwind CSS Animate](https://github.com/pmndrs/tailwindcss-animate)
-- [class-variance-authority](https://github.com/joe-bell/cva)
-- [shadcn/ui Theming](https://ui.shadcn.com/docs/theming)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate)
+- [class-variance-authority](https://cva.style/docs)
+- [shadcn/ui theming](https://ui.shadcn.com/docs/theming)

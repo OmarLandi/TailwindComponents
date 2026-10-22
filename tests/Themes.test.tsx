@@ -35,6 +35,68 @@ describe('Themes', () => {
     expect(button).toHaveAttribute('aria-checked', 'true');
   });
 
+  it('injects a valid scoped style element', () => {
+    render(
+      <ThemeProvider colorMode="dark" defaultPalette="violet">
+        <span>content</span>
+      </ThemeProvider>
+    );
+
+    const style = document.getElementById('theme-provider-style');
+    expect(style).toBeInTheDocument();
+    expect(style?.textContent).toContain('.dark.theme-violet');
+    expect(style?.textContent).toContain('--background:');
+    expect(style?.textContent).not.toContain('hsl(hsl(');
+  });
+
+  it('applies the color mode and palette classes to the wrapper', () => {
+    const { container } = render(
+      <ThemeProvider colorMode="dark" defaultPalette="emerald">
+        <span>content</span>
+      </ThemeProvider>
+    );
+
+    expect(container.firstChild).toHaveClass('dark', 'theme-emerald');
+  });
+
+  it('deep-merges defaultTheme overrides without dropping other tokens', () => {
+    render(
+      <ThemeProvider
+        defaultTheme={{
+          colors: { primary: 'hsl(280 80% 50%)' },
+          shadows: { md: '0 0 1px red' },
+          radius: '1rem',
+        }}
+      >
+        <span>content</span>
+      </ThemeProvider>
+    );
+
+    const css = document.getElementById('theme-provider-style')?.textContent ?? '';
+    expect(css).toContain('--primary: 280 80% 50%');
+    expect(css).toContain('--shadow-md: 0 0 1px red');
+    expect(css).toContain('--radius: 1rem');
+    expect(css).toContain('--background:');
+    expect(css).toContain('--shadow-sm:');
+  });
+
+  it('applies the theme to documentElement when applyToRoot is enabled', () => {
+    const { unmount } = render(
+      <ThemeProvider applyToRoot colorMode="dark" defaultPalette="violet">
+        <span>content</span>
+      </ThemeProvider>
+    );
+
+    const root = document.documentElement;
+    expect(root).toHaveClass('dark', 'theme-violet');
+    expect(root.style.getPropertyValue('--primary')).not.toBe('');
+
+    unmount();
+
+    expect(root).not.toHaveClass('dark', 'theme-violet');
+    expect(root.style.getPropertyValue('--primary')).toBe('');
+  });
+
   it('renders with variant', () => {
     render(
       <ThemeProvider>

@@ -1,5 +1,8 @@
 import * as React from 'react';
 
+import { buttonVariants } from '@/components/Button';
+import { cn } from '@/lib/utils';
+
 interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
@@ -36,7 +39,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   render(): React.ReactNode {
     if (this.state.hasError) {
       return (
-        <div role="alert">
+        <div role="alert" aria-live="assertive">
           {this.props.fallback ?? (
             <div className="p-4 rounded-md bg-destructive/10 text-destructive border border-destructive/20">
               <p className="font-semibold">Something went wrong</p>
@@ -47,7 +50,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
                 <button
                   type="button"
                   onClick={this.reset}
-                  className="mt-3 px-3 py-1.5 text-sm font-medium rounded-md bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className={cn(buttonVariants({ variant: 'destructive', size: 'sm' }), 'mt-3')}
                 >
                   Try again
                 </button>

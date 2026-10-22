@@ -1,5 +1,9 @@
 export type ColorMode = 'light' | 'dark';
 
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
 export type PaletteName =
   | 'neutral'
   | 'stone'
@@ -142,14 +146,15 @@ export interface ThemeContextValue {
   colorMode: ColorMode;
   setColorMode: (mode: ColorMode) => void;
   toggleColorMode: () => void;
-  setTheme: (theme: Partial<Theme>) => void;
+  setTheme: (theme: DeepPartial<Theme>) => void;
 }
 
 export interface ThemeProviderProps {
   colorMode?: ColorMode;
   defaultPalette?: PaletteName;
-  defaultTheme?: Partial<Theme>;
+  defaultTheme?: DeepPartial<Theme>;
   children: React.ReactNode;
   storageKey?: string;
   disableTransitionOnChange?: boolean;
+  applyToRoot?: boolean;
 }

@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import axe from 'axe-core';
+import '@testing-library/jest-dom/vitest';
 import {
   Select,
   SelectTrigger,
@@ -88,6 +90,45 @@ describe('Select', () => {
     expect(screen.getByText('Option 1')).toBeInTheDocument();
   });
 
+  it('should have no accessibility violations on select', async () => {
+    const { container } = render(
+      <Select defaultValue="option1">
+        <SelectTrigger aria-label="Select an option">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="option1">Option 1</SelectItem>
+          <SelectItem value="option2">Option 2</SelectItem>
+        </SelectContent>
+      </Select>
+    );
+    const results = await axe.run(container);
+    expect(results.violations).toHaveLength(0);
+  });
+
+  it('should have no accessibility violations with the portal open', async () => {
+    render(
+      <main>
+        <Select defaultOpen defaultValue="option1">
+          <SelectTrigger aria-label="Select an option">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="option1">Option 1</SelectItem>
+            <SelectItem value="option2">Option 2</SelectItem>
+          </SelectContent>
+        </Select>
+      </main>
+    );
+
+    expect(await screen.findByRole('listbox')).toBeInTheDocument();
+
+    const results = await axe.run(document.body, {
+      rules: { region: { enabled: false } },
+    });
+    expect(results.violations).toHaveLength(0);
+  });
+
   it('renders with different sizes', () => {
     const { rerender } = render(
       <Select>
@@ -121,6 +162,12 @@ describe('SelectField', () => {
     { value: 'banana', label: 'Banana' },
   ];
 
+  it('should have no accessibility violations on selectfield', async () => {
+    const { container } = render(<SelectField label="Fruit" items={items} />);
+    const results = await axe.run(container);
+    expect(results.violations).toHaveLength(0);
+  });
+
   it('renders with label', () => {
     render(<SelectField label="Fruit" items={items} />);
     expect(screen.getByText('Fruit')).toBeInTheDocument();
@@ -139,6 +186,34 @@ describe('SelectField', () => {
   it('shows loading indicator when isLoading is true', () => {
     render(<SelectField items={[]} isLoading placeholder="Loading..." />);
     expect(screen.getByRole('combobox').querySelector('.animate-spin')).toBeInTheDocument();
+  });
+
+  it('wires the error message to the trigger', () => {
+    render(<SelectField label="Fruit" items={items} error="This field is required" />);
+
+    const trigger = screen.getByRole('combobox');
+    const alert = screen.getByRole('alert');
+
+    expect(trigger).toHaveAttribute('aria-invalid', 'true');
+    expect(trigger).toHaveAttribute('aria-describedby', alert.id);
+  });
+
+  it('wires helper text to the trigger', () => {
+    render(<SelectField label="Fruit" items={items} helperText="Choose wisely" />);
+
+    const trigger = screen.getByRole('combobox');
+    const helper = screen.getByText('Choose wisely');
+
+    expect(trigger).toHaveAttribute('aria-describedby', helper.id);
+  });
+
+  it('renders the clear action outside the trigger', () => {
+    render(<SelectField label="Fruit" items={items} value="apple" />);
+
+    const trigger = screen.getByRole('combobox');
+    const clear = screen.getByRole('button', { name: 'Clear selection' });
+
+    expect(trigger).not.toContainElement(clear);
   });
 
   it('shows search input when showSearch is true', () => {

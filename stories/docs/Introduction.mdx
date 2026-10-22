@@ -116,11 +116,11 @@ Añade las variables CSS a tu archivo CSS principal:
 
 ```tsx
 import { Button, ThemeProvider } from 'libreria-componentes';
-import 'libreria-componentes/dist/style.css';
+import 'libreria-componentes/style.css';
 
 function App() {
   return (
-    <ThemeProvider defaultColorMode="light" defaultPalette="neutral">
+    <ThemeProvider colorMode="light" defaultPalette="neutral">
       <Button>Hola Mundo</Button>
     </ThemeProvider>
   );

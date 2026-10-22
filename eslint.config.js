@@ -52,6 +52,16 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['node_modules', 'dist', 'storybook-static', '.husky', '*.config.js', '*.config.ts'],
+    ignores: [
+      'node_modules',
+      'dist',
+      'storybook-static',
+      '.husky',
+      'playwright-report',
+      'test-results',
+      'blob-report',
+      '*.config.js',
+      '*.config.ts',
+    ],
   }
 );

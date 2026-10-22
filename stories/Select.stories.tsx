@@ -11,8 +11,8 @@ const fruits = [
   { value: 'strawberry', label: 'Strawberry', disabled: true },
 ];
 
-const meta: Meta = {
-  title: 'Components/Select',
+const meta: Meta<typeof SelectField> = {
+  title: 'Forms/Select',
   component: SelectField,
   tags: ['autodocs'],
   parameters: {
@@ -111,13 +111,13 @@ const [value, setValue] = useState('');
 };
 
 export default meta;
-type Story = StoryObj<typeof meta.component>;
+type Story = StoryObj<typeof SelectField>;
 
 const SelectWrapper: FC<SelectFieldProps> = args => {
   const [value, setValue] = useState('');
 
   return (
-    <div className="w-[300px]">
+    <div className="w-full max-w-sm">
       <SelectField {...args} value={value} onValueChange={setValue} />
     </div>
   );

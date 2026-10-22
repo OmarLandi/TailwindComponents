@@ -2,7 +2,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import path from 'path';
 
 export default defineConfig({
@@ -12,7 +11,6 @@ export default defineConfig({
       include: ['src'],
       exclude: ['stories'],
     }),
-    cssInjectedByJsPlugin(),
   ],
   resolve: {
     alias: {
@@ -30,8 +28,9 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'LibreriaComponentes',
-      fileName: format => `index.${format}.js`,
+      fileName: format => (format === 'es' ? 'index.mjs' : 'index.cjs'),
       formats: ['es', 'cjs'],
+      cssFileName: 'index',
     },
     rollupOptions: {
       external: ['react', 'react-dom'],

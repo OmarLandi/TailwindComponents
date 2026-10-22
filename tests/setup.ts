@@ -1,5 +1,37 @@
 import '@testing-library/jest-dom';
 
+globalThis.ResizeObserver ??= class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
+globalThis.IntersectionObserver ??= class IntersectionObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  root: Element | null = null;
+  rootMargin: string = '';
+  thresholds: ReadonlyArray<number> = [];
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+};
+
+Object.defineProperty(globalThis, 'matchMedia', {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  }),
+});
+
 HTMLCanvasElement.prototype.getContext = () => null;
 
 Element.prototype.hasPointerCapture ??= () => false;

@@ -11,8 +11,9 @@ Crear componentes de React con:
 - TypeScript completo
 - Tailwind CSS con variables CSS
 - class-variance-authority (CVA) para variantes
-- Accesibilidad WCAG 2.1
-- Storybook con autodocs
+- Accesibilidad WCAG 2.2 AA
+- Responsive mobile-first (320–1536 px), targets ≥44 px
+- Storybook con autodocs y viewports 375/768/1280
 - Tests con Vitest + axe-core
 
 ---
@@ -115,12 +116,12 @@ Al trabajar con una librería existente, verifica que los componentes sigan esto
 
 **Revisión de Storybook:**
 
-- ✅ Una story "Default" con args
-- ✅ Variantes como controles (select), no todas como stories separadas
-- ✅ Estados (disabled, loading) como args
-- ✅ Título: "Components/Nombre"
+- ✅ Una story "Playground" con args
+- ✅ Variantes como controles (select) en `argTypes`
+- ✅ Estados (disabled, loading, error) como args
+- ✅ Título: `'<Categoría>/<Nombre>'` (Forms, Navigation, Data Display, Utilities)
 - ✅ Documentación clara en docs.description
-- ✅ Envolver componentes en ThemeProvider para probar temas
+- ✅ NO envolver en ThemeProvider por story: el decorador global de `.storybook/preview.tsx` ya lo hace
 - ✅ Para Select: usar SelectGroup alrededor de SelectLabel
 
 **Revisión de Exports:**
@@ -144,7 +145,7 @@ Basado en la investigación, presenta los hallazgos y pregunta confirmando:
 6. **Estados**: Estados comunes encontrados y preguntar "¿Otros estados?"
 7. **Responsive**: "¿Adaptación responsive?"
 
-> **Regla**: Si el usuario no responde, sugerir默认值 razonable y pregunta "¿Estás de acuerdo?"
+> **Regla**: Si el usuario no responde, sugerir valores por defecto razonables y preguntar "¿Estás de acuerdo?"
 
 ### FASE 2: Propuesta
 
@@ -164,10 +165,10 @@ Antes de código, presenta:
 
 ### Props:
 
-| Prop    | Tipo                     | Default   | Descripción   |
-| ------- | ------------------------ | --------- | ------------- |
-| variant | 'default' \| 'secondary' | 'default' | Estilo visual |
-| size    | 'sm' \| 'md' \| 'lg'     | 'md'      | Tamaño        |
+| Prop    | Tipo                      | Default   | Descripción   |
+| ------- | ------------------------- | --------- | ------------- |
+| variant | 'default' \| 'secondary'  | 'default' | Estilo visual |
+| size    | 'sm' \| 'default' \| 'lg' | 'default' | Tamaño        |
 
 ### ¿Confirmas proceder?
 ```
@@ -214,27 +215,28 @@ Antes de entregar, verificar:
 ### Storybook
 
 ```
-✓ title: 'Components/Nombre'
+✓ title: '<Categoría>/<Nombre>'  (Forms, Navigation, Data Display, Utilities)
 ✓ component: Nombre
 ✓ tags: ['autodocs']
 ✓ argTypes con description
-✓ Ejemplo Default
-✓ Envolvente ThemeProvider en stories (ver sección abaixo)
+✓ Story "Playground" con args
+✓ Sin ThemeProvider por story (el decorador global ya lo aplica)
 ```
 
-### Storybook con ThemeProvider
+### Storybook con theming global
 
-El proyecto tiene un ThemeProvider configurado globalmente en `.storybook/preview.tsx` que permite probar los componentes en diferentes temas. Los componentes deben usar las variables CSS del theme (background, foreground, primary, etc.).
+El proyecto tiene un `ThemeProvider` configurado globalmente en `.storybook/preview.tsx`, que envuelve cada story y expone dos controles en la toolbar:
 
-**Decorador automático disponible:**
-
-- `Color Mode`: light / dark (toolbar)
+- `Color Mode`: light / dark
 - `Palette`: neutral, stone, zinc, slate, violet, rose, orange, emerald, blue, red, indigo, amber, cyan
 
 **Consideraciones para stories:**
 
-- Componentes como Container pueden necesitar bordes de visualización en las stories (no en el componente): `className="border border-dashed border-gray-400"`
+- NO añadir `<ThemeProvider>` dentro de las stories: el decorador global ya lo hace.
+- Usa clases del tema (`bg-background`, `text-foreground`), nunca colores hardcodeados.
+- Componentes como Container pueden necesitar bordes de visualización en las stories (no en el componente): `className="border border-dashed border-border"`
 - Para Select, usar `SelectGroup` alrededor de `SelectLabel` (requerido por Radix UI)
+- Para Dialog/Drawer, incluir `DialogTitle` y `DialogDescription` (o `aria-describedby={undefined}`)
 
 ### Tests
 
@@ -262,10 +264,10 @@ import { cn } from '@/lib/utils';
 const nombreVariants = cva('base-classes', {
   variants: {
     variant: { default: '...', secondary: '...' },
-    size: { sm: '...', md: '...', lg: '...' },
+    size: { sm: '...', default: '...', lg: '...' },
   },
   compoundVariants: [{ variant: 'default', size: 'icon', className: 'rounded-full' }],
-  defaultVariants: { variant: 'default', size: 'md' },
+  defaultVariants: { variant: 'default', size: 'default' },
 });
 
 export interface NombreProps
@@ -298,10 +300,9 @@ export type { NombreProps } from './Nombre';
 ```tsx
 import type { Meta, StoryObj } from '@storybook/react';
 import { Nombre } from '../src/components/Nombre';
-import { ThemeProvider } from '../src/components/Themes';
 
 const meta: Meta<typeof Nombre> = {
-  title: 'Components/Nombre',
+  title: 'Forms/Nombre', // '<Categoría>/<Nombre>'
   component: Nombre,
   tags: ['autodocs'],
   parameters: {
@@ -312,33 +313,38 @@ const meta: Meta<typeof Nombre> = {
     },
   },
   argTypes: {
-    variant: { control: 'select', description: 'Estilo visual' },
-    size: { control: 'select', description: 'Tamaño' },
+    variant: {
+      control: 'select',
+      options: ['default', 'secondary'],
+      description: 'Estilo visual',
+    },
+    size: {
+      control: 'select',
+      options: ['sm', 'default', 'lg'],
+      description: 'Tamaño',
+    },
+    children: { control: 'text' },
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Nombre>;
 
-export const Default: Story = {
-  render: () => (
-    <ThemeProvider>
-      <Nombre>Contenido</Nombre>
-    </ThemeProvider>
-  ),
+// Story principal: usa args para que Controls funcione
+export const Playground: Story = {
+  args: {
+    children: 'Contenido',
+    variant: 'default',
+    size: 'default',
+  },
 };
 
-// Para componentes que necesitan entorno ThemeProvider
-export const VariantExample: Story = {
-  render: () => (
-    <ThemeProvider>
-      <div className="flex gap-4">
-        <Nombre variant="default">Default</Nombre>
-        <Nombre variant="secondary">Secondary</Nombre>
-        <Nombre variant="outline">Outline</Nombre>
-      </div>
-    </ThemeProvider>
-  ),
+// Estados adicionales como args (disabled, loading, etc.)
+export const Disabled: Story = {
+  args: {
+    children: 'Contenido',
+    disabled: true,
+  },
 };
 ```
 
@@ -398,12 +404,12 @@ describe('Nombre', () => {
 1. **Investigar primero** - Siempre buscar estándares en librerías reconocidas antes de preguntar
 2. **Tests siempre** - Sin excepción
 3. **Una pregunta a la vez** - No abrumar al usuario
-4. **Sugerir默认值** - Si no hay respuesta
+4. **Sugerir valores por defecto** - Si no hay respuesta
 5. **Confirmar antes de crear** - Mostrar propuesta primero
 6. **CSS variables obligatorias** - No hardcoded
 7. **Seguir plantillas** - Exactamente como ejemplos
-8. **Storybook simple** - Solo una historia Default, variantes en controles
-9. **ThemeProvider en stories** - Envolver componentes en ThemeProvider para probar temas
+8. **Storybook simple** - Story `Playground` con `args`; variantes como controles `select`
+9. **Theming global** - NO envolver cada story en ThemeProvider; el decorador de `.storybook/preview.tsx` ya lo hace
 10. **SelectGroup con SelectLabel** - Siempre usar SelectGroup alrededor de SelectLabel
 
 ---

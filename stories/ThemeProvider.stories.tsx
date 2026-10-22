@@ -1,16 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { ThemeProvider, useTheme } from '../src/components/Themes';
-import type { ThemePaletteName as PaletteName } from '../src/components/Themes';
 import { Button } from '../src/components/Button';
 
-const meta: Meta = {
-  title: 'Foundations/ThemeProvider',
+const meta: Meta<typeof ThemeProvider> = {
+  title: 'Utilities/ThemeProvider',
   component: ThemeProvider,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: `El ThemeProvider es el componente central para gestionar el tema de la aplicación. Inyecta variables CSS personalizadas y proporciona el contexto de tema a todos los componentes hijos.
+        component: `The ThemeProvider is the central component for managing the application theme. It injects custom CSS variables and provides the theme context to all child components.
 
 ## Basic usage
 
@@ -62,7 +61,7 @@ const ThemeDemo = () => {
   const colorMode = themeContext?.colorMode || 'light';
 
   if (!theme?.colors) {
-    return <div>Cargando...</div>;
+    return <div>Loading...</div>;
   }
 
   const colors = theme.colors;
@@ -109,7 +108,7 @@ const ThemeDemo = () => {
         }}
       >
         <h4 style={{ marginTop: 0, color: colors.cardForeground }}>Card Component</h4>
-        <p style={{ color: colors.cardForeground }}>Ejemplo de tarjeta</p>
+        <p style={{ color: colors.cardForeground }}>Example card content</p>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <Button size="sm" variant="default">
             Primary
@@ -154,36 +153,37 @@ const ThemeDemo = () => {
 
       <div style={{ padding: '12px', backgroundColor: colors.muted, borderRadius: '6px' }}>
         <p style={{ margin: 0, color: colors.mutedForeground, fontSize: '14px' }}>
-          Modo: <strong>{colorMode}</strong>
+          Mode: <strong>{colorMode}</strong>
         </p>
       </div>
     </div>
   );
 };
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ThemeProvider>;
 
 const PlaygroundWrapper = ({
   colorMode,
   defaultPalette,
 }: {
   colorMode?: 'light' | 'dark';
-  defaultPalette?: PaletteName;
+  defaultPalette?: string;
 }) => (
-  <ThemeProvider colorMode={colorMode} defaultPalette={defaultPalette} storageKey="storybook-theme">
+  <ThemeProvider
+    colorMode={colorMode}
+    defaultPalette={defaultPalette as 'violet' | 'neutral'}
+    storageKey="storybook-theme"
+  >
     <ThemeDemo />
   </ThemeProvider>
 );
 
 export const Playground: Story = {
   args: {
-    colorMode: 'light',
-    defaultPalette: 'violet',
+    colorMode: 'light' as const,
+    defaultPalette: 'violet' as const,
   },
   render: args => (
-    <PlaygroundWrapper
-      colorMode={args.colorMode}
-      defaultPalette={args.defaultPalette as PaletteName}
-    />
+    <PlaygroundWrapper colorMode={args.colorMode} defaultPalette={args.defaultPalette} />
   ),
 };

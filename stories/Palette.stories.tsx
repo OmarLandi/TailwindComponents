@@ -2,16 +2,16 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ThemeProvider, getPalette, getPaletteNames } from '../src/components/Themes';
 import type { PaletteName } from '../src/components/Themes';
 
-const meta: Meta = {
-  title: 'Foundations/Palette',
+const meta: Meta<typeof ThemeProvider> = {
+  title: 'Utilities/Palette',
   component: ThemeProvider,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: `Sistema de paletas de colores disponibles en la librería. Cada paleta define colores tanto para modo claro como oscuro.
+        component: `Color palette system available in the library. Each palette defines colors for both light and dark mode.
 
-## Available Paletas
+## Available Palettes
 
 | Palette | Description |
 |---------|-------------|
@@ -59,7 +59,7 @@ const allPalettes = getPaletteNames();
 };
 
 export default meta;
-type Story = StoryObj<typeof meta.component>;
+type Story = StoryObj<typeof ThemeProvider>;
 
 const PaletteSwatch = ({ name, color }: { name: string; color: string }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
@@ -126,12 +126,9 @@ const AllPalettes = ({ colorMode }: { colorMode: 'light' | 'dark' }) => (
 );
 
 export const Playground: Story = {
-  args: {
-    colorMode: 'light',
-  },
-  render: (args: { colorMode: 'light' | 'dark' }) => (
-    <ThemeProvider colorMode={args.colorMode} storageKey="palette-storybook">
-      <AllPalettes colorMode={args.colorMode} />
+  render: () => (
+    <ThemeProvider storageKey="palette-storybook">
+      <AllPalettes colorMode="light" />
     </ThemeProvider>
   ),
 };

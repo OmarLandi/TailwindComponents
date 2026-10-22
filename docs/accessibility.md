@@ -1,173 +1,153 @@
-# Documentación de Accesibilidad
+# Accesibilidad (a11y)
 
-## ¿Qué es la Accesibilidad?
+## Objetivo
 
-La accesibilidad (a11y) significa que todas las personas pueden usar los componentes, incluyendo:
+Todos los componentes deben ser usables con teclado y lectores de pantalla, y cumplir **WCAG 2.2 nivel AA** en lo posible. La accesibilidad se verifica automáticamente con `axe-core` en cada archivo de test y manualmente con el panel **Accessibility** de Storybook.
 
-- Personas con discapacidad visual (usuarios de lectores de pantalla)
-- Personas con discapacidad motora (usan teclado en lugar de mouse)
-- Personas mayores que pueden tener visión reducida
+## Herramientas
 
-**WCAG 2.1** son las pautas internacionales de accesibilidad web. "Nivel AA" significa que cumplimos la mayoría de los requisitos esenciales.
+| Herramienta                   | Uso                                           |
+| ----------------------------- | --------------------------------------------- |
+| `axe-core`                    | Auditoría automatizada dentro de Vitest       |
+| `@storybook/addon-a11y`       | Panel de accesibilidad por story en Storybook |
+| `@testing-library/react`      | Queries por rol/nombre accesible              |
+| `@testing-library/user-event` | Interacciones reales (teclado, click, tab)    |
 
-## Librerías de Accesibilidad
+> `@axe-core/react` está instalado como dependencia de desarrollo, pero **los tests del proyecto usan `axe.run(container)` de `axe-core`** y comprueban `results.violations`. No uses `toHaveNoViolations`.
 
-### @storybook/addon-a11y
-
-**Propósito:** Panel de verificación de accesibilidad integrado en Storybook.
-
-**Instalación:** Incluida por defecto en el proyecto.
-
-**Uso en Storybook:**
-
-- Al ejecutar `npm run dev`, cada story muestra un panel de "Accessibility"
-- Muestra automáticamente violaciones de WCAG
-- Proporciona sugerencias detalladas para corregir problemas
-
-**Configuración en `.storybook/main.ts`:**
-
-```ts
-addons: ['@storybook/addon-a11y', ...]
-```
-
-### @axe-core/react
-
-**Propósito:** Testing automatizado de accesibilidad en pruebas unitarias.
-
-**Instalación:**
-
-```bash
-npm install -D @axe-core/react
-```
-
-**Uso en tests:**
+## Patrón de test obligatorio
 
 ```tsx
-import { axe, toHaveNoViolations } from '@axe-core/react';
-import { render } from '@testing-library/react';
-import { Button } from '../src/components/Button';
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import axe from 'axe-core';
+import '@testing-library/jest-dom/vitest';
+import { Badge } from '../src/components/Badge';
 
-expect.extend(toHaveNoViolations);
+describe('Badge', () => {
+  it('renders correctly', () => {
+    render(<Badge>New</Badge>);
+    expect(screen.getByText('New')).toBeInTheDocument();
+  });
 
-describe('Button Accessibility', () => {
-  it('should have no accessibility violations', async () => {
-    const { container } = render(<Button>Click me</Button>);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
+  it('has no accessibility violations', async () => {
+    const { container } = render(<Badge>New</Badge>);
+    const results = await axe.run(container);
+    expect(results.violations).toHaveLength(0);
   });
 });
 ```
 
-### @testing-library/user-event
+Cada componente nuevo **debe** incluir al menos un test con `axe.run(container)`. Si el
+componente renderiza en un portal (Dialog, Drawer, Select, DropdownMenu, Popover, Toast),
+abre el overlay y audita `axe.run(document.body)` o el nodo `[data-theme-portal]`: el
+contenedor de la story no incluye el portal y el test pasaría sin auditar el contenido real.
 
-**Propósito:** Simula interacciones reales de usuario para testing.
+> `axe` en `jsdom` desactiva `color-contrast`; el contraste se verifica en Storybook o con un
+> test que calcule ratios a partir de los tokens.
 
-**Instalación:**
+## Setup de tests
 
-```bash
-npm install -D @testing-library/user-event
-```
+`tests/setup.ts` prepara el entorno `jsdom` con los polyfills que necesitan Radix y Embla:
 
-**Uso:**
+- `ResizeObserver`, `IntersectionObserver`, `matchMedia`
+- `HTMLCanvasElement.prototype.getContext`
+- `hasPointerCapture`, `setPointerCapture`, `releasePointerCapture`, `scrollIntoView`
+- `PointerEvent` (mock si no existe)
+
+Si un componente nuevo usa una API de navegador no cubierta, añade el polyfill en `tests/setup.ts` en lugar de mockearlo en cada test.
+
+## Patrones por componente
+
+### Formularios
+
+- `<label htmlFor={id}>` asociado al control. Usa `React.useId()` cuando no se reciba `id`.
+- `aria-invalid={hasError}` y `aria-describedby` apuntando al helper o al error.
+- El mensaje de error debe tener `role="alert"` (o `aria-live`).
+- `required` real en el input, con indicador visual `aria-hidden` para el asterisco.
+- `RadioGroup`/`ToggleGroup`: agrupa con `<fieldset>` + `<legend>` cuando representen una pregunta.
 
 ```tsx
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Button } from '../src/components/Button';
+const generatedId = React.useId();
+const inputId = id || generatedId;
+const hasError = !!errorMessage;
 
-it('handles user interaction correctly', async () => {
-  const user = userEvent.setup();
-  const handleClick = vi.fn();
-
-  render(<Button onClick={handleClick}>Click me</Button>);
-
-  await user.click(screen.getByRole('button'));
-  expect(handleClick).toHaveBeenCalledTimes(1);
-});
+<label htmlFor={inputId}>{label}</label>
+<input
+  id={inputId}
+  aria-invalid={hasError}
+  aria-describedby={hasError ? `${inputId}-error` : undefined}
+/>
+{hasError && (
+  <p id={`${inputId}-error`} role="alert">
+    {errorMessage}
+  </p>
+)}
 ```
 
-## Principios de Accesibilidad Implementados
+### Botones e iconos
 
-### 1. Semántica HTML
+- Usa `<button type="button">`; no `<div onClick>`.
+- Botones solo-icono necesitan `aria-label`.
+- Iconos decorativos: `aria-hidden="true"` y `focusable="false"` cuando aplique.
+- Estado de carga: `aria-busy` + `disabled` (el `Button` ya lo hace).
 
-- Uso de elementos HTML semánticos (`<button>`, `<a>`, `<input>`)
-- Roles ARIA cuando es necesario
-- Labels asociados correctamente
+### Diálogos y overlays
 
-### 2. Navegación por Teclado
+Radix exige título y descripción accesibles:
 
-- Todos los componentes son navegables con Tab
-- Soporte para teclas de dirección donde corresponde
-- Indicadores visuales de foco visibles
+- `Dialog` / `Drawer`: incluye `DialogTitle` y `DialogDescription`.
+- Si no hay descripción visible, usa `aria-describedby={undefined}`.
+- No elimines el `DialogClose`; mantén cierre por `Escape`.
 
-### 3. Contraste de Colores
+### Navegación por teclado
 
-- Cumplimiento de ratio 4.5:1 para texto normal
-- Variables CSS diseñadas para cumplir WCAG
-- Soporte para modo oscuro
+Prueba explícitamente:
 
-### 4. Screen Readers
+| Componente                     | Teclas                              |
+| ------------------------------ | ----------------------------------- |
+| `Tabs`                         | Flechas izquierda/derecha, Home/End |
+| `Accordion`                    | Enter/Space, flechas                |
+| `RadioGroup`, `ToggleGroup`    | Flechas, Space                      |
+| `Select`, `Combobox`           | Flechas, Enter, Escape              |
+| `Dialog`, `Drawer`, `Popover`  | Escape, Tab (focus trap)            |
+| `Button`, `Checkbox`, `Switch` | Enter/Space                         |
 
-- Attributes ARIA apropiados
-- Labels visibles y descriptivos
-- Mensajes de estado anunciados
+### Elementos decorativos
 
-## Patrones de Accesibilidad en Componentes
+- `Skeleton`, overlays y adornos: `aria-hidden="true"`.
+- Imágenes decorativas: `alt=""`.
 
-### Button
+### Anuncios dinámicos
 
-- ✅ Rol `button` implícito
-- ✅ Soporte para `disabled`
-- ✅ Estados de foco visibles
-- ✅ Contraste suficiente en todas las variantes
+- Errores y cambios importantes: `role="alert"` o `aria-live="assertive"`.
+- Contadores/estados no críticos: `aria-live="polite"`.
 
-### ErrorBoundary
+## Errores y estados
 
-- ✅ Mensajes de error claros
-- ✅ Rol `alert` para errores críticos
+- `ErrorBoundary`: contenedor con `role="alert"` y `aria-live="assertive"`; reutiliza `buttonVariants`/`Button` para el botón de reset.
+- Estados vacíos (`No results found`): texto visible, no solo color.
+- Estados `disabled`: además de `disabled`, evita que el foco entre en elementos no interactivos.
 
-## Mejores Prácticas
+## Checklist antes de cerrar un componente
 
-### Al Crear Nuevos Componentes
+- [ ] Rol semántico correcto (o ARIA equivalente).
+- [ ] Nombre accesible (`label`, `aria-label` o contenido textual).
+- [ ] Navegable con Tab y operable con teclado.
+- [ ] Foco visible (`focus-visible:ring-2`).
+- [ ] Estados anunciados (`aria-invalid`, `aria-busy`, `aria-live`, `role="alert"`).
+- [ ] Iconos decorativos con `aria-hidden`.
+- [ ] Contraste suficiente en light/dark y en todas las paletas.
+- [ ] Test de `axe.run(container)` sin violaciones; portales con `axe.run(document.body)`.
+- [ ] Targets ≥44×44 px y sin contenido oculto focusable.
+- [ ] `prefers-reduced-motion` y RTL comprobados.
+- [ ] Sin scroll horizontal de página en 375/768/1280 px.
+- [ ] Revisado el panel Accessibility en Storybook.
 
-1. **Usa elementos semánticos:**
+## Recursos
 
-   ```tsx
-   // ✅ Correcto
-   <button>Click me</button>
-
-   // ❌ Incorrecto
-   <div onClick={...}>Click me</div>
-   ```
-
-2. **Agrega labels:**
-
-   ```tsx
-   // ✅ Correcto
-   <Button aria-label="Cerrar diálogo">
-     <XIcon />
-   </Button>
-   ```
-
-3. **Maneja estados de foco:**
-
-   ```tsx
-   // ✅ Correcto - usa Tailwind
-   className = 'focus-visible:ring-2 focus-visible:ring-offset-2';
-   ```
-
-4. **Testea con axe-core:**
-   ```tsx
-   it('should have no a11y violations', async () => {
-     const { container } = render(<MyComponent />);
-     const results = await axe(container);
-     expect(results).toHaveNoViolations();
-   });
-   ```
-
-## Recursos Adicionales
-
-- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
-- [A11y Project Checklist](https://www.a11yproject.com/checklist/)
-- [React Aria](https://react-spectrum.adobe.com/react-aria/)
+- [WCAG 2.2 Quick Reference](https://www.w3.org/WAI/WCAG22/quickref/)
 - [WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
+- [A11y Project Checklist](https://www.a11yproject.com/checklist/)
+- [Radix Accessibility](https://www.radix-ui.com/primitives/docs/overview/accessibility)
+- [Testing Library queries](https://testing-library.com/docs/queries/about/#priority)

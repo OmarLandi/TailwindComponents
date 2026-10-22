@@ -24,6 +24,23 @@ const preview: Preview = {
         },
       ],
     },
+    viewport: {
+      defaultViewport: 'responsive',
+      viewports: {
+        mobile: {
+          name: 'Mobile (375px)',
+          styles: { width: '375px', height: '812px' },
+        },
+        tablet: {
+          name: 'Tablet (768px)',
+          styles: { width: '768px', height: '1024px' },
+        },
+        desktop: {
+          name: 'Desktop (1280px)',
+          styles: { width: '1280px', height: '800px' },
+        },
+      },
+    },
   },
   globalTypes: {
     colorMode: {
@@ -68,17 +85,16 @@ const preview: Preview = {
     (Story, context) => {
       const colorMode = (context.globals.colorMode || 'light') as ColorMode;
       const palette = (context.globals.palette || 'neutral') as PaletteName;
+      const isFullscreen = context.parameters.layout === 'fullscreen';
 
       return (
-        <ThemeProvider defaultColorMode={colorMode} defaultPalette={palette}>
+        <ThemeProvider colorMode={colorMode} defaultPalette={palette}>
           <div
-            className={colorMode}
-            style={{
-              minHeight: '100vh',
-              padding: '1rem',
-              backgroundColor: colorMode === 'dark' ? '#1a1a1a' : '#ffffff',
-              color: colorMode === 'dark' ? '#ffffff' : '#000000',
-            }}
+            className={
+              isFullscreen
+                ? 'min-h-dvh bg-background text-foreground'
+                : `${colorMode} min-h-screen bg-background p-4 text-foreground`
+            }
           >
             <Story />
           </div>

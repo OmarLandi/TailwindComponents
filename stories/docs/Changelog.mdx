@@ -10,6 +10,55 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ---
 
+## [1.0.1] - 2026-05-11
+
+### Added
+
+#### Componentes Nuevos
+
+- **Accordion**: Acordeón expandible basado en Radix UI con soporte para items, contenido y triggers personalizados.
+- **Alert**: Alertas informativas con variantes (default, destructive, success, warning, info) y título descriptivo.
+- **Avatar**: Avatar con imagen y fallback, basado en `@radix-ui/react-avatar`.
+- **Badge**: Badge con variantes (default, secondary, destructive, outline, success, warning, info) y sizes (sm, default, lg).
+- **Breadcrumb**: Navegación de migas de pan con separadores, elipsis y página actual (`aria-current`).
+- **Calendar**: Calendario interactivo basado en `react-day-picker` con selección de fechas y navegación de meses.
+- **Card**: Tarjeta compuesta por `CardHeader`, `CardTitle`, `CardContent` y `CardFooter`.
+- **Carousel**: Carrusel de imágenes basado en Embla Carousel con botones de navegación anterior/siguiente.
+- **Checkbox**: Checkbox basado en Radix UI con label, helper text, error y required.
+- **Combobox**: Combobox con búsqueda, popover, opciones seleccionables, clearable y loading state.
+- **DatePicker**: Selector de fecha con calendario emergente, formato personalizable y placeholder.
+- **Dialog**: Diálogo modal basado en Radix UI con `DialogTrigger`, `DialogContent`, `DialogHeader`, `DialogFooter`.
+- **Drawer**: Panel deslizable desde los 4 bordes (left, right, top, bottom) con overlay y botón de cierre configurable.
+- **Footer**: Pie de página con múltiples columnas, enlaces, logo, copyright y redes sociales.
+- **InputOTP**: Campo de entrada OTP con grupos de caracteres, separadores, regex validation y pasting.
+- **Navbar**: Barra de navegación responsive con logo, enlaces, menú móvil y acciones (login, registro).
+- **Pagination**: Paginación con botones anterior/siguiente, elipsis y números de página activos.
+- **Popover**: Popover emergente basado en Radix UI con trigger y contenido posicionable.
+- **Progress**: Barra de progreso con label, valor porcentual, showValue y animación CSS.
+- **RadioGroup**: Grupo de radios basado en Radix UI con label, helper text, error y orientación.
+- **Sidebar**: Sidebar colapsable con `SidebarHeader`, `SidebarGroup`, `SidebarItem`, `SidebarSeparator` y `SidebarFooter`.
+- **Skeleton**: Esqueleto de carga con variantes text, circular y rectangular, más animación pulse.
+- **Slider**: Slider de rango con label, helper text, showValue, formatValue y tooltips.
+- **Switch**: Switch toggle con label, helper text, error y required, basado en Radix UI.
+- **Table**: Tabla simple con `<Table>`, `<TableHeader>`, `<TableBody>`, `<TableFooter>` y `<TableCaption>`.
+- **Tabs**: Pestañas basadas en Radix UI con `TabsList`, `TabsTrigger` y `TabsContent`.
+- **Textarea**: Área de texto con label, helper text, contador de caracteres, error y maxLength.
+- **Toast**: Notificaciones toast con `ToastTitle`, `ToastDescription`, `ToastAction` y `ToastClose`.
+- **ToggleGroup**: Grupo de toggles basado en Radix UI con selección múltiple (default) o única.
+- **Tooltip**: Tooltip informativo basado en Radix UI que aparece al hacer hover sobre el trigger.
+
+### Changed
+
+- Versión del paquete actualizada de `1.0.0` a `1.0.1`.
+
+### Fixed
+
+- Agregados polyfills de `ResizeObserver`, `IntersectionObserver` y `matchMedia` para entorno de tests (jsdom).
+- Corregida accesibilidad: `aria-label` añadido a Progress, Combobox y Slider; texto `sr-only` añadido a ToastClose.
+- Corregidas queries de tests en Breadcrumb, Sidebar, Drawer, Tooltip, Avatar y Carousel.
+
+---
+
 ## [1.0.0] - 2026-02-20
 
 ### Added

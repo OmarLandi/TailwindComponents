@@ -2,23 +2,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from '../src/components/Button';
 
 const meta: Meta<typeof Button> = {
-  title: 'Components/Button',
+  title: 'Forms/Button',
   component: Button,
   tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: `A versatile button component with support for variants, sizes, icons, loading states, and responsive sizing.
-
-## Basic usage
-
-\`\`\`tsx
-import { Button } from 'libreriacomponentes';
-
-<Button variant="default" size="default">
-  Click me
-</Button>
-\`\`\`
+        component: `A versatile button component for triggering actions. Supports multiple variants, sizes, and states.
 
 ## Variants
 
@@ -39,19 +29,13 @@ import { Button } from 'libreriacomponentes';
 <Button size="default">Default</Button>
 <Button size="lg">Large</Button>
 <Button size="xl">XL</Button>
-<Button size="icon">+</Button>
+<Button size="icon"><Search /></Button>
 \`\`\`
 
 ## Loading state
 
 \`\`\`tsx
 <Button isLoading>Loading</Button>
-\`\`\`
-
-## Full width
-
-\`\`\`tsx
-<Button fullWidth>Full Width Button</Button>
 \`\`\`
 
 ## Icons

@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "stories", "tests"],
+  "include": ["src", "stories", "tests", "e2e", "playwright.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

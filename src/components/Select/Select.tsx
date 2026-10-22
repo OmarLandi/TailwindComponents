@@ -4,6 +4,7 @@ import { Check, ChevronDown, ChevronUp, Loader2, Search, X } from 'lucide-react'
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
+import { usePortalContainer } from '@/components/Themes/PortalContainer';
 
 const Select = SelectPrimitive.Root;
 const SelectGroup = SelectPrimitive.Group;
@@ -54,41 +55,40 @@ const SelectTrigger = React.forwardRef<
       onClear?.(e);
     };
 
+    const showClearButton = showClear && !disabled && !isLoading;
+
     return (
-      <SelectPrimitive.Trigger
-        ref={ref}
-        className={cn(selectTriggerVariants({ size, state, className }))}
-        data-invalid={state === 'error' ? 'true' : undefined}
-        disabled={disabled || isLoading}
-        {...props}
-      >
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground shrink-0" />}
-          <span className="truncate flex-1">{children}</span>
-        </div>
-        <div className="flex items-center gap-1 shrink-0">
-          {showClear && !disabled && !isLoading && (
-            <span
-              role="button"
-              onClick={handleClearClick}
-              className="rounded-full p-0.5 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
-              tabIndex={0}
-              aria-label="Clear selection"
-              onKeyDown={e => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onClear?.(e as unknown as React.MouseEvent);
-                }
-              }}
-            >
-              <X className="h-3.5 w-3.5 text-muted-foreground" />
-            </span>
-          )}
-          <SelectPrimitive.Icon asChild>
-            <ChevronDown className="h-4 w-4 opacity-50" />
-          </SelectPrimitive.Icon>
-        </div>
-      </SelectPrimitive.Trigger>
+      <div className="relative w-full">
+        <SelectPrimitive.Trigger
+          ref={ref}
+          className={cn(selectTriggerVariants({ size, state, className }))}
+          data-invalid={state === 'error' ? 'true' : undefined}
+          disabled={disabled || isLoading}
+          {...props}
+        >
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            {isLoading && (
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin text-muted-foreground" />
+            )}
+            <span className="flex-1 truncate">{children}</span>
+          </div>
+          <div className="flex shrink-0 items-center gap-1">
+            <SelectPrimitive.Icon asChild>
+              <ChevronDown className="h-4 w-4 opacity-50" aria-hidden="true" />
+            </SelectPrimitive.Icon>
+          </div>
+        </SelectPrimitive.Trigger>
+        {showClearButton && (
+          <button
+            type="button"
+            onClick={handleClearClick}
+            className="absolute end-8 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-label="Clear selection"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        )}
+      </div>
     );
   }
 );
@@ -103,7 +103,7 @@ const SelectScrollUpButton = React.forwardRef<
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
-    <ChevronUp className="h-4 w-4" />
+    <ChevronUp className="h-4 w-4" aria-hidden="true" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -117,7 +117,7 @@ const SelectScrollDownButton = React.forwardRef<
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
-    <ChevronDown className="h-4 w-4" />
+    <ChevronDown className="h-4 w-4" aria-hidden="true" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
@@ -148,6 +148,7 @@ const SelectContent = React.forwardRef<
     ref
   ) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const portalContainer = usePortalContainer();
 
     React.useEffect(() => {
       if (showSearch && inputRef.current) {
@@ -156,11 +157,11 @@ const SelectContent = React.forwardRef<
     }, [showSearch]);
 
     return (
-      <SelectPrimitive.Portal>
+      <SelectPrimitive.Portal container={portalContainer ?? undefined}>
         <SelectPrimitive.Content
           ref={ref}
           className={cn(
-            'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-0 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+            'relative z-50 max-h-[85dvh] min-w-[8rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-md border bg-popover p-0 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
             position === 'popper' && 'w-full min-w-[var(--radix-select-trigger-width)]',
             className
           )}
@@ -169,13 +170,14 @@ const SelectContent = React.forwardRef<
         >
           {showSearch && (
             <div className="flex items-center border-b px-3 py-2">
-              <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+              <Search className="me-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
               <input
                 ref={inputRef}
                 type="text"
                 onChange={e => onSearchChange?.(e.target.value)}
                 placeholder={searchPlaceholder}
-                className="flex h-8 w-full rounded-md bg-transparent py-1 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Search options"
+                className="flex h-11 w-full rounded-md bg-transparent py-1 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
@@ -200,7 +202,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn('py-1.5 pl-8 pr-2 text-sm font-semibold', className)}
+    className={cn('py-1.5 ps-8 pe-2 text-sm font-semibold', className)}
     {...props}
   />
 ));
@@ -215,26 +217,26 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'relative flex min-h-11 w-full cursor-default select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       className
     )}
     {...props}
   >
     {icon && (
-      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">{icon}</span>
+      <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">{icon}</span>
     )}
     {!icon && (
-      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <Check className="h-4 w-4" />
+          <Check className="h-4 w-4" aria-hidden="true" />
         </SelectPrimitive.ItemIndicator>
       </span>
     )}
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     {icon && (
-      <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+      <span className="absolute end-2 flex h-3.5 w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <Check className="h-4 w-4" />
+          <Check className="h-4 w-4" aria-hidden="true" />
         </SelectPrimitive.ItemIndicator>
       </span>
     )}
@@ -262,6 +264,7 @@ export interface SelectFieldProps extends Omit<
   placeholder?: string;
   helperText?: React.ReactNode;
   error?: React.ReactNode;
+  id?: string;
   showSearch?: boolean;
   searchPlaceholder?: string;
   onSearchChange?: (value: string) => void;
@@ -273,6 +276,7 @@ export interface SelectFieldProps extends Omit<
   disabled?: boolean;
   isLoading?: boolean;
   className?: string;
+  'aria-describedby'?: string;
 }
 
 const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(
@@ -292,13 +296,24 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(
       size = 'default',
       disabled,
       isLoading,
+      id,
       className,
+      onOpenChange,
+      'aria-describedby': ariaDescribedBy,
       ...props
     },
     ref
   ) => {
     const [searchValue, setSearchValue] = React.useState('');
+    const generatedId = React.useId();
+    const fieldId = id || generatedId;
+    const helperId = `${fieldId}-helper`;
+    const errorId = `${fieldId}-error`;
     const state = error ? 'error' : 'default';
+    const describedBy =
+      [error ? errorId : helperText ? helperId : undefined, ariaDescribedBy]
+        .filter(Boolean)
+        .join(' ') || undefined;
 
     const filteredItems = React.useMemo(() => {
       if (!searchValue.trim()) return items;
@@ -320,12 +335,16 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(
       if (!open) {
         setSearchValue('');
       }
+      onOpenChange?.(open);
     };
 
     return (
       <div className={cn('flex flex-col gap-1.5', className)}>
         {label && (
-          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          <label
+            htmlFor={fieldId}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             {label}
           </label>
         )}
@@ -339,12 +358,15 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(
         >
           <SelectTrigger
             ref={ref}
+            id={fieldId}
             size={size}
             state={state}
             disabled={disabled}
             isLoading={isLoading}
             showClear={!!value && !disabled}
             onClear={handleClear}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy}
           >
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
@@ -364,8 +386,16 @@ const SelectField = React.forwardRef<HTMLButtonElement, SelectFieldProps>(
             )}
           </SelectContent>
         </Select>
-        {error && <p className="text-sm text-destructive">{error}</p>}
-        {helperText && !error && <p className="text-sm text-muted-foreground">{helperText}</p>}
+        {error && (
+          <p id={errorId} role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
+        {helperText && !error && (
+          <p id={helperId} className="text-sm text-muted-foreground">
+            {helperText}
+          </p>
+        )}
       </div>
     );
   }

@@ -1,4 +1,6 @@
 export { ThemeProvider } from './ThemeProvider';
+export { PortalContainerProvider, usePortalContainer } from './PortalContainer';
+export type { PortalContainerProviderProps } from './PortalContainer';
 export { useTheme } from './useTheme';
 export { ThemeToggle, themesVariants } from './Themes';
 export type { ThemeToggleProps } from './Themes';

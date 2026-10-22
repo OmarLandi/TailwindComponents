@@ -78,6 +78,20 @@ describe('Button', () => {
     expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Close dialog');
   });
 
+  it('supports asChild without a wrapper element', () => {
+    render(
+      <Button asChild>
+        <a href="/docs">Documentation</a>
+      </Button>
+    );
+
+    const link = screen.getByRole('link', { name: 'Documentation' });
+    expect(link).toHaveClass('bg-primary');
+    expect(link).toHaveAttribute('href', '/docs');
+    expect(link).not.toHaveAttribute('type');
+    expect(link.querySelector('span')).not.toBeInTheDocument();
+  });
+
   it('supports responsive sizes', () => {
     render(<Button responsiveSize="h-9 px-3 text-xs lg:h-11 lg:px-8">Responsive</Button>);
     const button = screen.getByRole('button');

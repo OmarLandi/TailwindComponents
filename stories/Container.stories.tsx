@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Container } from '../src/components/Container';
 
 const meta: Meta<typeof Container> = {
-  title: 'Components/Container',
+  title: 'Data Display/Container',
   component: Container,
   tags: ['autodocs'],
   parameters: {
@@ -28,6 +28,10 @@ import { Container } from 'libreriacomponentes';
 <Container size="lg">Large container (1024px)</Container>
 <Container size="xl">XL container (1280px)</Container>
 <Container size="2xl">2XL container (1536px)</Container>
+<Container size="form">Form container (32rem)</Container>
+<Container size="prose">Prose container (65ch)</Container>
+<Container size="content">Content container (64rem)</Container>
+<Container size="wide">Wide container (80rem)</Container>
 <Container size="full">Full width (no max-width)</Container>
 \`\`\`
 
@@ -46,7 +50,7 @@ When \`fluid\` is true, the container always fills the available width:
   argTypes: {
     size: {
       control: 'select',
-      options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl', 'full'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl', 'form', 'prose', 'content', 'wide', 'full'],
     },
     padding: {
       control: 'select',
@@ -72,7 +76,7 @@ export const Playground: Story = {
   },
   render: args => (
     <Container {...args}>
-      <div className="border border-dashed border-gray-400 p-4">{args.children}</div>
+      <div className="border border-dashed border-border p-4">{args.children}</div>
     </Container>
   ),
 };

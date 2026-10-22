@@ -60,11 +60,37 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       responsiveSize,
       children,
       disabled,
+      onClick,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : 'button';
+    const isDisabled = disabled || isLoading;
+    const renderContent = (node: React.ReactNode) => (
+      <>
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden="true" />
+        ) : (
+          leftIcon
+        )}
+        {node}
+        {!isLoading && rightIcon}
+      </>
+    );
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (isDisabled) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+
+      onClick?.(event);
+    };
+
+    const child = asChild
+      ? (React.Children.only(children) as React.ReactElement<{ children?: React.ReactNode }>)
+      : null;
 
     return (
       <Comp
@@ -74,23 +100,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           fullWidth && 'w-full',
           responsiveSize
         )}
-        disabled={disabled || isLoading}
+        disabled={asChild ? undefined : isDisabled}
         ref={ref}
-        aria-busy={isLoading}
-        aria-disabled={disabled || isLoading}
+        aria-busy={isLoading || undefined}
+        aria-disabled={isDisabled || undefined}
+        onClick={handleClick}
         {...props}
       >
-        {isLoading ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-            {children}
-          </>
+        {asChild ? (
+          React.cloneElement(
+            child as React.ReactElement,
+            undefined,
+            renderContent(child?.props.children)
+          )
         ) : (
-          <span className="inline-flex items-center gap-2">
-            {leftIcon}
-            {children}
-            {rightIcon}
-          </span>
+          <span className="inline-flex items-center gap-2">{renderContent(children)}</span>
         )}
       </Comp>
     );

@@ -1,664 +1,295 @@
 # Arquitectura del Proyecto
 
-## Visión General
+## Visión general
 
-Esta librería de componentes sigue una arquitectura modular, escalable y mantenible, inspirada en las mejores prácticas de **shadcn/ui** y **Atomic Design**.
+Librería de componentes de UI para React 18 + TypeScript, construida con Tailwind CSS, Radix UI y CVA (class-variance-authority), siguiendo los patrones de **shadcn/ui**.
 
-## Principios de Arquitectura
+| Área          | Tecnología                               |
+| ------------- | ---------------------------------------- |
+| UI            | React 18 + TypeScript (strict)           |
+| Estilos       | Tailwind CSS 3.4 + variables CSS         |
+| Variantes     | `class-variance-authority` (CVA)         |
+| Primitivas    | Radix UI (`@radix-ui/react-*`)           |
+| Iconos        | `lucide-react`                           |
+| Build         | Vite 6 + `vite-plugin-dts`               |
+| Documentación | Storybook 8 (CSF 3)                      |
+| Testing       | Vitest + Testing Library + `axe-core`    |
+| Calidad       | ESLint 9 + Prettier + Husky + commitlint |
 
-### 1. Single Responsibility Principle (SRP)
+## Principios
 
-Cada componente tiene una única responsabilidad bien definida.
+1. **Single Responsibility**: cada componente resuelve un único problema de UI.
+2. **Composición sobre herencia**: `asChild` con Radix `Slot` en lugar de props de anidación.
+3. **Type safety**: TypeScript estricto, props exportadas y `VariantProps` para variantes.
+4. **Theming por CSS variables**: nunca se hardcodean colores.
+5. **Accesibilidad primero**: primitivas Radix + labels correctos + tests con `axe-core`.
+6. **Responsive por defecto**: mobile-first, sin anchos fijos de página, targets ≥44 px.
+7. **Páginas componibles**: primitivas de layout + plantillas documentadas en `docs/layouts.md`.
 
-### 2. Separation of Concerns
-
-Separación clara entre:
-
-- **Componentes**: Lógica de presentación
-- **Utilidades**: Funciones helper
-- **Estilos**: Variables CSS y configuración
-
-### 3. Composition over Inheritance
-
-Los componentes se construyen mediante composición, no herencia.
-
-### 4. Type Safety
-
-TypeScript strict mode para seguridad total en tiempo de compilación.
-
-## Estructura de Directorios
+## Estructura de directorios
 
 ```
 libreria-componentes/
-├── .storybook/              # Configuración de Storybook
-│   ├── main.ts             # Configuración principal
-│   ├── preview.ts           # Preview global
-│   └── decorators.ts       # Decoradores globales
-├── docs/                    # Documentación del proyecto
+├── .storybook/
+│   ├── main.ts               # Configuración de Storybook (stories, addons, autodocs)
+│   └── preview.tsx           # ThemeProvider + toolbar de tema/paleta + viewports 375/768/1280
+├── docs/                     # Documentación del proyecto
+├── prompts/
+│   └── create-component.md   # Prompt especializado para generar componentes con IA
 ├── src/
-│   ├── components/          # Componentes de la librería
+│   ├── components/
 │   │   ├── Button/
-│   │   │   ├── Button.tsx # Implementación del componente
-│   │   │   └── index.ts   # Export del componente
-│   │   ├── ErrorBoundary/
-│   │   │   ├── ErrorBoundary.tsx
+│   │   │   ├── Button.tsx    # Implementación (CVA + forwardRef)
+│   │   │   └── index.ts      # Export del componente, variantes y tipos
+│   │   ├── Themes/
+│   │   │   ├── ThemeProvider.tsx
+│   │   │   ├── Themes.tsx    # ThemeToggle
+│   │   │   ├── useTheme.ts
+│   │   │   ├── defaultTheme.ts
+│   │   │   ├── palettes.ts   # 13 paletas (light + dark)
+│   │   │   ├── types.ts
 │   │   │   └── index.ts
-│   │   └── index.ts       # Barrel export (re-exporta todo)
+│   │   └── index.ts          # Barrel export de los 49 componentes
 │   ├── lib/
-│   │   └── utils.ts       # Utilidades (función cn para clases)
-│   ├── index.ts          # Entry point (punto de entrada)
-│   └── index.css         # Estilos globales (CSS variables)
-├── package.json            # Dependencias y scripts
-├── tsconfig.json          # Configuración TypeScript
-├── vite.config.ts         # Configuración de build
-└── tailwind.config.js    # Configuración Tailwind
+│   │   └── utils.ts          # cn() = twMerge(clsx(...))
+│   ├── index.ts              # Entry point: export * from './components'
+│   └── index.css             # @tailwind + variables CSS base y paletas
+├── stories/                  # Storybook (un .stories.tsx por componente)
+│   └── templates/            # Plantillas de página completas (Templates/*)
+├── tests/                    # Vitest (un .test.tsx por componente) + setup.ts
+├── tailwind.config.cjs       # Mapea CSS vars a utilidades Tailwind
+├── vite.config.ts            # Build de librería + configuración de Vitest
+├── tsconfig.json             # strict + path alias @/*
+├── eslint.config.js          # Flat config (ESLint 9)
+└── package.json
 ```
 
-## Guía de Uso
+## Configuración y alias
 
-### Instalación
+- `@/*` → `./src/*` (definido en `tsconfig.json` y `vite.config.ts`).
+- Entrada de la librería: `src/index.ts` → `src/components/index.ts` (barrel).
+- Alias de shadcn: `components.json` (`@/components`, `@/lib/utils`, `@/hooks`).
 
-```bash
-npm install libreria-componentes
-```
-
-### Configuración Inicial
-
-#### 1. Importar estilos
-
-En tu archivo principal (`App.tsx` o root):
+## Patrón de componente
 
 ```tsx
-import 'libreria-componentes/style.css';
-```
-
-#### 2. Configurar Tailwind (opcional)
-
-Si necesitas personalizar los colores, agrega las variables en tu CSS:
-
-```css
-/* Tu archivo CSS global */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    /* Override de colores primarios */
-    --primary: 250 84% 54%;
-    --primary-foreground: 0 0% 100%;
-  }
-}
-```
-
-### Uso de Componentes
-
-#### Button
-
-```tsx
-import { Button, buttonVariants } from 'libreria-componentes';
-
-// Uso básico
-<Button>Click me</Button>
-
-// Con variante
-<Button variant="destructive">Delete</Button>
-
-// Con tamaño
-<Button size="lg">Large</Button>
-
-// Con icono
-import { Plus } from 'lucide-react';
-<Button leftIcon={<Plus />}>Add Item</Button>
-
-// Estado de carga
-<Button isLoading>Loading...</Button>
-
-// Composición (asChild)
-import { Link } from 'react-router-dom';
-<Button asChild>
-  <Link to="/dashboard">Dashboard</Link>
-</Button>
-```
-
-#### ErrorBoundary
-
-```tsx
-import { ErrorBoundary } from 'libreria-componentes';
-
-// Uso básico
-<ErrorBoundary>
-  <YourApp />
-</ErrorBoundary>
-
-// Con fallback personalizado
-<ErrorBoundary fallback={<ErrorDisplay />}>
-  <YourApp />
-</ErrorBoundary>
-
-// Con callback de error
-<ErrorBoundary onError={(error, info) => console.error(error)}>
-  <YourApp />
-</ErrorBoundary>
-```
-
-### Modo Oscuro
-
-La librería soporta modo oscuro automáticamente:
-
-```tsx
-// Agrega la clase 'dark' al elemento root
-<html className="dark">
-  <App />
-</html>
-```
-
-O configura Tailwind:
-
-```js
-// tailwind.config.js
-export default {
-  darkMode: ['class'],
-  // ...
-};
-```
-
-### Personalización de Tema
-
-#### Variables CSS
-
-```css
-:root {
-  /* Colores base */
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
-
-  /* Radio de bordes */
-  --radius: 0.5rem;
-
-  /* Colores semánticos */
-  --destructive: 0 84.2% 60.2%;
-  --success: 142 76% 36%;
-  --warning: 45 93% 47%;
-  --info: 199 89% 48%;
-}
-```
-
-#### Colores en Modo Oscuro
-
-```css
-.dark {
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  /* ... */
-}
-```
-
-## Patrones de Componentes
-
-### Componente Base con Variantes
-
-```tsx
-// src/components/Button/Button.tsx
+import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+
 import { cn } from '@/lib/utils';
 
-// 1. Definir variantes con CVA
-const buttonVariants = cva('base-classes', {
-  variants: {
-    variant: {
-      default: 'bg-primary text-primary-foreground',
-      secondary: 'bg-secondary text-secondary-foreground',
+// 1. Variantes con CVA (colores siempre desde variables del tema)
+const badgeVariants = cva(
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors',
+  {
+    variants: {
+      variant: {
+        default: 'border-transparent bg-primary text-primary-foreground',
+        secondary: 'border-transparent bg-secondary text-secondary-foreground',
+      },
+      size: {
+        sm: 'h-5 px-2',
+        default: 'h-6 px-2.5',
+        lg: 'h-7 px-3',
+      },
     },
-    size: {
-      sm: 'h-8 px-3',
-      default: 'h-10 px-4',
-    },
-  },
-  defaultVariants: {
-    variant: 'default',
-    size: 'default',
-  },
-});
-
-// 2. Definir props con extends
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
-  // Props adicionales
-}
-
-// 3. Componente con forwardRef
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, ...props }, ref) => {
-    return (
-      <button className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
-    );
+    defaultVariants: { variant: 'default', size: 'default' },
   }
 );
-Button.displayName = 'Button';
 
-export { Button, buttonVariants };
+// 2. Props: extender las HTML + VariantProps. No redeclarar variant/size.
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {}
+
+// 3. forwardRef + displayName
+const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ className, variant, size, ...props }, ref) => (
+    <span ref={ref} className={cn(badgeVariants({ variant, size, className }))} {...props} />
+  )
+);
+Badge.displayName = 'Badge';
+
+// 4. Export del componente, las variantes y los tipos
+export { Badge, badgeVariants };
 ```
 
-### Error Boundary
+### Componentes basados en Radix
+
+Los wrappers de Radix mantienen el patrón de shadcn:
 
 ```tsx
-// src/components/ErrorBoundary/ErrorBoundary.tsx
-import { Component, ReactNode } from 'react';
+const Tabs = TabsPrimitive.Root;
 
-interface ErrorBoundaryProps {
-  children: ReactNode;
-  fallback?: ReactNode;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-}
-
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    this.props.onError?.(error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback ?? <div>Error</div>;
-    }
-    return this.props.children;
-  }
-}
+const TabsList = React.forwardRef<
+  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+>(({ className, ...props }, ref) => (
+  <TabsPrimitive.List
+    ref={ref}
+    className={cn(
+      'inline-flex h-10 items-center justify-center rounded-md bg-muted p-1',
+      className
+    )}
+    {...props}
+  />
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
 ```
 
-## Sistema de Exports
+Reglas:
 
-### Barrel Export
+- `React.ElementRef<typeof Primitive>` para el tipo del ref.
+- `React.ComponentPropsWithoutRef<typeof Primitive>` para las props.
+- `displayName = Primitive.displayName` (excepto cuando se añade lógica propia).
+- El componente compuesto (p. ej. `SelectField`, `Combobox`) sí recibe un `displayName` propio.
 
-```tsx
+## Exports
+
+```ts
+// src/components/Button/index.ts
+export { Button, buttonVariants } from './Button';
+export type { ButtonProps } from './Button';
+
 // src/components/index.ts
 export * from './Button';
-export * from './ErrorBoundary';
-```
 
-### Entry Point
-
-```tsx
 // src/index.ts
 export * from './components';
 ```
 
-### Export de Componentes Individuales
+Toda carpeta nueva debe registrarse en `src/components/index.ts`.
+
+## Capa de layout y plantillas
+
+La librería se organiza en tres capas:
+
+1. **Primitivas** (`Button`, `TextField`, `Dialog`...): una responsabilidad, tema y a11y.
+2. **Layout**: `Stack`, `Grid`, `Section`, `PageHeader`, `AppShell`, `Prose`,
+   `SkipLink`, `VisuallyHidden`, `AspectRatio`, `ScrollArea`, `Separator`.
+3. **Plantillas** (`stories/templates/`): composiciones de página completas que no se publican
+   como componentes; documentan App Shell/Dashboard, Auth, Settings, Marketing, Docs,
+   E-commerce/List-Detail, CRUD y estados.
+
+Contrato: mobile-first 320–1536 px, anchos semánticos (`form`, `prose`, `content`, `wide`,
+`full`), un solo scroll de página, overlays con `max-h`/`dvh`, navegación móvil modal y
+targets ≥44 px. El catálogo y la matriz de variantes están en
+[`docs/layouts.md`](./layouts.md).
+
+## Sistema de theming
+
+```
+palettes.ts     ──► ThemeProvider ──► <div class="{colorMode} theme-{palette}">
+defaultTheme.ts ──► ThemeProvider ──► <style id="theme-provider-style"> (scoped)
+                                          │
+                                          ├─► PortalContainerProvider ──► nodo en <body> con las mismas clases
+                                          └─► applyToRoot (opt-in) ──► <html> (clases + variables)
+                                          │
+tailwind.config.cjs ──► hsl(var(--background)) ──► Componentes (bg-background, text-foreground)
+```
+
+- `defaultTheme.ts` define colores, tipografía, radios, sombras y spacing.
+- `palettes.ts` define 13 paletas; cada una tiene `light` y `dark` con **todos** los campos de `ThemeColors`.
+- `ThemeProvider` lee el modo desde `localStorage` (`theme-color-mode` por defecto), mergea en profundidad base + paleta + `defaultTheme` + overrides de `setTheme` (`DeepPartial<Theme>`), y expone `useTheme()`.
+- Los colores de `defaultTheme.ts`/`palettes.ts` se escriben **con** `hsl(...)`; `ThemeProvider` elimina el wrapper al generar las variables, porque `tailwind.config.cjs` ya aplica `hsl(var(--...))`.
+- `src/index.css` contiene los valores por defecto en `:root`/`.dark` (formato HSL crudo) para usar la librería sin `ThemeProvider`.
+- **Portales**: `PortalContainerProvider` crea un nodo en `<body>` con las clases `${colorMode} theme-${palette}`; `Dialog`, `Drawer`, `Select`, `DropdownMenu` y `Popover` lo obtienen con `usePortalContainer()` y lo pasan al `container` de Radix. Así los overlays conservan la paleta y los overrides sin tocar `<html>`.
+- `applyToRoot` (opt-in) replica clases y variables en `document.documentElement` para portales de terceros o para tematizar el documento completo; restaura los valores previos al desmontar.
+
+## Cómo agregar un componente
+
+1. Crear `src/components/Nombre/Nombre.tsx` (patrón CVA + `forwardRef` + `cn`), mobile-first y
+   solo con tokens del tema.
+2. Crear `src/components/Nombre/index.ts` exportando componente, variantes y tipos.
+3. Añadir `export * from './Nombre';` en `src/components/index.ts`.
+4. Crear `stories/Nombre.stories.tsx` con `title: '<Categoría>/Nombre'`, `tags: ['autodocs']`,
+   `args` y story `Mobile` si cambia la estructura.
+5. Crear `tests/Nombre.test.tsx` con teclado y `axe-core` (en portales, `axe.run(document.body)`).
+6. Verificar a 375/768/1280 px: sin overflow, foco visible, targets ≥44 px, light/dark.
+7. Verificar: `npx tsc --noEmit`, `npm run test:run`, `npm run lint`.
+8. Actualizar `docs/CHANGELOG.md`; si es primitiva de layout, `docs/layouts.md`.
+
+Para el flujo asistido por IA, usa los skills `crear-componente` (componentes) o `crear-layout`
+(páginas y plantillas). El prompt `prompts/create-component.md` sigue siendo válido.
+
+## Testing
+
+El runner es **Vitest** con entorno `jsdom` y `tests/setup.ts` como setup global (polyfills de `ResizeObserver`, `IntersectionObserver`, `matchMedia`, `PointerEvent`, etc.).
+
+Las plantillas de stories/templates/ se validan ademas con **Playwright** (e2e/templates.e2e.ts): 33 casos en Chromium a 375/768/1280 comprueban overflow horizontal, un unico h1 y snapshots. Ejecuta
+pm run test:e2e; usa
+pm run test:e2e:update solo para refrescar baselines intencionales.
 
 ```tsx
-// src/components/Button/index.ts
-export { Button, buttonVariants } from './Button';
-export type { ButtonProps } from './Button';
-```
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import axe from 'axe-core';
+import '@testing-library/jest-dom/vitest';
+import { Button } from '../src/components/Button';
 
-## Flujo de Datos
+describe('Button', () => {
+  it('renders with children', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole('button')).toHaveTextContent('Click me');
+  });
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         Consumers                            │
-│  (Apps que instalan la librería)                           │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      Entry Point                            │
-│  src/index.ts → Re-exports de components/                  │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Components Layer                         │
-│  Button/          ErrorBoundary/           ...             │
-│  ├── Button.tsx   ├── ErrorBoundary.tsx                    │
-│  └── index.ts     └── index.ts                             │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Utilities Layer                           │
-│  lib/utils.ts → cn(), class merging                        │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Styling Layer                             │
-│  tailwind.config.js + index.css (CSS variables)            │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Build y Distribución
-
-### Configuración de Vite
-
-```ts
-// vite.config.ts
-export default defineConfig({
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'LibreriaComponentes',
-      fileName: format => `index.${format}.js`,
-      formats: ['es', 'cjs'],
-    },
-    rollupOptions: {
-      external: ['react', 'react-dom'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
-      },
-    },
-  },
+  it('has no accessibility violations', async () => {
+    const { container } = render(<Button>Click me</Button>);
+    const results = await axe.run(container);
+    expect(results.violations).toHaveLength(0);
+  });
 });
 ```
 
-### Exports en package.json
+Comandos:
+
+```bash
+npm run test:run                                   # toda la suite
+npx vitest run tests/Button.test.tsx               # un archivo
+npx vitest run -t "renders with children"          # un test por nombre
+```
+
+## Build y distribución
+
+`vite.config.ts` genera ESM (`.mjs`) + CJS (`.cjs`), emite los tipos con `vite-plugin-dts` y compila `src/index.css` a `dist/index.css`. React y ReactDOM son externos.
 
 ```json
 {
-  "name": "libreria-componentes",
-  "main": "./dist/index.js",
+  "sideEffects": ["**/*.css"],
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.cjs"
     },
-    "./style.css": "./dist/index.css"
+    "./style.css": "./dist/index.css",
+    "./package.json": "./package.json"
   }
 }
 ```
 
-## Testing
+> El consumidor debe importar `libreria-componentes/style.css` una vez. Los estilos no se inyectan por JS, lo que evita FOUC en SSR y permite cachear el CSS por separado.
 
-### Estructura de Tests
+## Git y calidad
 
-```tsx
-// tests/Button.test.tsx
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { axe, toHaveNoViolations } from '@axe-core/react';
-import { Button } from '../src/components/Button';
+Hooks de Husky:
 
-expect.extend(toHaveNoViolations);
+- `.husky/pre-commit`: `prettier --write .` → `eslint . --fix` → `tsc --noEmit` → `vitest run`.
+- `.husky/commit-msg`: `commitlint --edit` (Conventional Commits).
 
-describe('Button', () => {
-  // Tests de renderizado
-  it('renders correctly', () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByRole('button')).toBeInTheDocument();
-  });
+Convención de commits: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`.
 
-  // Tests de props
-  it('applies variant correctly', () => {
-    render(<Button variant="destructive">Delete</Button>);
-    const button = screen.getByRole('button');
-    expect(button).toHaveClass('bg-destructive');
-  });
+## Glosario
 
-  // Tests de interacción
-  it('handles click events', async () => {
-    const user = userEvent.setup();
-    const handleClick = vi.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
-
-    await user.click(screen.getByRole('button'));
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
-
-  // Tests de accesibilidad
-  it('should have no accessibility violations', async () => {
-    const { container } = render(<Button>Click me</Button>);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
-});
-```
-
-## Git Workflow
-
-### Conventional Commits
-
-```
-feat: add new Button variant
-fix: resolve Button loading state
-docs: update changelog
-refactor: improve ErrorBoundary
-test: add tests for new component
-chore: update dependencies
-```
-
-### Husky + lint-staged
-
-- **pre-commit**: Ejecuta lint-staged (lint + test)
-- **pre-push**: Ejecuta tests completos
-
-## Agregar Nuevo Componente
-
-### Opción 1: Manual
-
-1. **Crear carpeta:**
-
-   ```bash
-   mkdir src/components/NuevoComponente
-   ```
-
-2. **Implementar componente:**
-
-   ```tsx
-   // src/components/NuevoComponente/NuevoComponente.tsx
-   import { cva, type VariantProps } from 'class-variance-authority';
-   import { cn } from '@/lib/utils';
-
-   const nuevoVariants = cva('base-classes', { ... });
-
-   export interface NuevoComponenteProps extends VariantProps<typeof nuevoVariants> {}
-
-   export function NuevoComponente({ ... }) { ... }
-   ```
-
-3. **Crear index.ts:**
-
-   ```tsx
-   // src/components/NuevoComponente/index.ts
-   export { NuevoComponente, nuevoVariants } from './NuevoComponente';
-   export type { NuevoComponenteProps } from './NuevoComponente';
-   ```
-
-4. **Actualizar exports:**
-
-   ```tsx
-   // src/components/index.ts
-   export * from './NuevoComponente';
-   ```
-
-5. **Crear story:**
-
-   ```tsx
-   // stories/NuevoComponente.stories.tsx
-   // (seguir patrón de Button.stories.tsx)
-   ```
-
-6. **Crear tests:**
-
-   ```tsx
-   // tests/NuevoComponente.test.tsx
-   ```
-
-7. **Actualizar CHANGELOG:**
-
-   ```md
-   ## [1.1.0] - 2026-02-13
-
-   ### Added
-
-   - New `NuevoComponente` component
-   ```
-
-### Opción 2: Con IA (Recomendado)
-
-Esta librería incluye un **prompt especializado** para crear componentes de forma asistida por IA.
-
-#### ¿Qué es el prompt?
-
-El archivo `prompts/create-component.md` contiene instrucciones detalladas para que una IA cree componentes siguiendo los patrones y buenas prácticas del proyecto.
-
-#### ¿Cómo usar el prompt con una IA?
-
-1. **Copia el contenido del archivo** `prompts/create-component.md`
-
-2. **Pégalo en tu IA favorita** (ChatGPT, Claude, Gemini, etc.)
-
-3. **Indica qué componente quieres crear** - por ejemplo:
-
-   > "Quiero crear un componente Card"
-
-4. **La IA te hará preguntas** sobre:
-   - Propósito del componente
-   - Variantes necesarias
-   - Props requeridas
-   - Estados especiales
-   - Requisitos de responsive
-
-5. **La IA creará automáticamente:**
-   - Componente en `src/components/Nombre/Nombre.tsx`
-   - Archivo de export en `src/components/Nombre/index.ts`
-   - Story en `stories/Nombre.stories.tsx`
-   - Tests en `tests/Nombre.test.tsx`
-   - Actualizará `src/components/index.ts`
-
-#### Beneficios de usar el prompt con IA
-
-- ✅ Sigue automáticamente los patrones establecidos
-- ✅ Genera código TypeScript con tipos completos
-- ✅ Incluye accesibilidad WCAG 2.1
-- ✅ Soporta modo oscuro
-- ✅ Crea Storybook y tests
-- ✅ Questions clarificadoras para entender requisitos
-
-#### Ejemplo de conversación
-
-```
-Usuario: Quiero crear un componente Modal
-IA: Perfecto! Para crear el componente Modal, necesito hacerte algunas preguntas:
-
-1. ¿Qué variantes de estilo debería tener? (ej: default, destructive, con/sin overlay)
-2. ¿Qué tamaños? (sm, md, lg, xl, fullscreen)
-3. ¿Qué props necesita? (isOpen, onClose, title, children, etc.)
-4. ¿Necesita animaciones? (fade, scale, slide)
-5. ¿Debe cerrar al hacer click fuera? (backdrop click)
-6. ¿Debe cerrar con ESC? (keyboard escape)
-7. ¿Necesita focus trap? (bloquear foco dentro del modal)
-
-Usuario: variant default y destructive, tamaños sm/lg, props: isOpen, onClose, title, children, closeOnBackdropClick=true, closeOnEscape=true, animate=true
-
-IA: Perfecto! Voy a crear el componente Modal siguiendo los patrones del proyecto...
-```
-
-#### Notas importantes
-
-- **Revisa siempre el código generado** - la IA puede cometer errores
-- **Los prompts están en inglés** - si prefieres español, adapta el prompt
-- **Puedes modificar el prompt** según tus necesidades específicas
-
-## Mejores Prácticas
-
-### DO ✅
-
-- Usar TypeScript strict
-- Crear barrel exports
-- Agregar JSDoc comments
-- Tests de accesibilidad
-- Props con defaults seguros
-- Usar CVA para variantes
-
-### DON'T ❌
-
-- No hardcodear colores (usar CSS variables)
-- No usar `any` type
-- No crear componentes monolíticos
-- No duplicar código entre componentes
-- No olvidar exports de tipos
-
-## Recursos
-
-- [shadcn/ui](https://ui.shadcn.com/)
-- [Atomic Design](https://atomicdesign.bradfrost.com/)
-- [CVA Documentation](https://github.com/joe-bell/cva)
-- [TypeScript Best Practices](https://www.typescriptlang.org/docs/)
-
-## Glosario para Principiantes
-
-| Término                                   | Significado                                           |
-| ----------------------------------------- | ----------------------------------------------------- |
-| **SRP (Single Responsibility Principle)** | Cada componente hace una sola cosa bien               |
-| **Separation of Concerns**                | Separar lógica, vista y estilos                       |
-| **Composition**                           | Construir componentes pequeños y combinarlos          |
-| **Type Safety**                           | TypeScript te ayuda a evitar errores                  |
-| **Barrel Export**                         | Archivo que re-exporta muchos módulos (index.ts)      |
-| **Entry Point**                           | El archivo principal que se importa primero           |
-| **CVA**                                   | Library para hacer variantes de componentes           |
-| **forwardRef**                            | Permite que un componente exponga un elemento del DOM |
-| **Husky**                                 | Herramienta que ejecuta scripts antes de commit/push  |
-| **lint-staged**                           | Ejecuta linter solo en archivos modificados           |
-| **Conventional Commits**                  | Formato de mensajes de commit: tipo: descripción      |
-
-## Conceptos Clave Explicados
-
-### ¿Qué es un Barrel Export?
-
-Es un archivo `index.ts` que exporta todo lo de una carpeta. Así puedes importar desde un solo lugar:
-
-```tsx
-// En lugar de esto:
-import { Button } from './components/Button/Button';
-import { ErrorBoundary } from './components/ErrorBoundary/ErrorBoundary';
-
-// Puedes hacer esto:
-import { Button, ErrorBoundary } from 'libreria-componentes';
-```
-
-### ¿Por qué usar CVA?
-
-CVA (class-variance-authority) ayuda a manejar las variantes de un componente de forma organizada:
-
-```tsx
-// En lugar de muchos if/else:
-const variant = variant === 'primary' ? 'bg-blue-500' : 'bg-gray-500';
-
-// CVA lo hace más limpio:
-const buttonVariants = cva('base', {
-  variants: {
-    variant: {
-      primary: 'bg-blue-500',
-      secondary: 'bg-gray-500',
-    },
-  },
-});
-```
-
-### ¿Qué es forwardRef?
-
-Sirve para que puedas usar el componente y acceder al elemento HTML que renderiza:
-
-```tsx
-const Button = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-  return <button ref={ref} {...props} />;
-});
-
-// Ahora puedes usar ref:
-<Button ref={myButtonRef} />;
-```
+| Término           | Significado                                                        |
+| ----------------- | ------------------------------------------------------------------ |
+| **Barrel export** | `index.ts` que re-exporta los módulos de una carpeta               |
+| **CVA**           | `class-variance-authority`; genera clases a partir de variantes    |
+| **`cn()`**        | `twMerge(clsx(...))`; combina clases resolviendo conflictos        |
+| **CSS variables** | Variables (`--primary`, etc.) que permiten el theming en runtime   |
+| **`forwardRef`**  | Permite exponer el nodo DOM del componente al consumidor           |
+| **Radix `Slot`**  | Compone el componente sobre el hijo (`asChild`) sin wrappers extra |
+| **CSF**           | Component Story Format, el formato de stories de Storybook         |
+| **`axe-core`**    | Motor de auditoría de accesibilidad usado en los tests             |

@@ -13,6 +13,10 @@ const containerVariants = cva('', {
       lg: 'max-w-4xl',
       xl: 'max-w-6xl',
       '2xl': 'max-w-7xl',
+      form: 'max-w-[32rem]',
+      prose: 'max-w-[65ch]',
+      content: 'max-w-[64rem]',
+      wide: 'max-w-[80rem]',
       full: 'max-w-full',
     },
     padding: {

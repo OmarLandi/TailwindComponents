@@ -162,7 +162,7 @@ export const Mobile: Story = {
   globals: {
     viewport: {
       value: 'mobile',
-      isRotated: false
-    }
+      isRotated: false,
+    },
   },
 };

@@ -21,8 +21,8 @@ const preview: Preview = {
         dark: {
           name: 'dark',
           value: '#1a1a1a',
-        }
-      }
+        },
+      },
     },
     viewport: {
       options: {
@@ -38,7 +38,7 @@ const preview: Preview = {
           name: 'Desktop (1280px)',
           styles: { width: '1280px', height: '800px' },
         },
-      }
+      },
     },
   },
 
@@ -107,13 +107,13 @@ const preview: Preview = {
   initialGlobals: {
     viewport: {
       value: 'responsive',
-      isRotated: false
+      isRotated: false,
     },
 
     backgrounds: {
-      value: 'light'
-    }
-  }
+      value: 'light',
+    },
+  },
 };
 
 export default preview;

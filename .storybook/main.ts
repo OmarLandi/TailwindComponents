@@ -8,7 +8,7 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
     '@storybook/addon-themes',
     '@storybook/addon-mcp',
-    '@storybook/addon-docs'
+    '@storybook/addon-docs',
   ],
 
   framework: {
@@ -23,7 +23,7 @@ const config: StorybookConfig = {
         postcss: './postcss.config.cjs',
       },
     };
-  }
+  },
 };
 
 export default config;

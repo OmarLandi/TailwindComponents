@@ -107,12 +107,13 @@ Al trabajar con una librería existente, verifica que los componentes sigan esto
 - ✅ Props simples y predecibles
 
 **Revisión de UI:**
-| Patrón | Correcto | Incorrecto |
-|--------|----------|------------|
+
+| Patrón    | Correcto                                        | Incorrecto                                 |
+| --------- | ----------------------------------------------- | ------------------------------------------ |
 | Variantes | default, secondary, outline, ghost, destructive | soft-_, 3d-_, gradient-_, pill-_, glass-\* |
-| Tamaños | sm, default, lg | xs, md, xl, icon-sm, icon-lg |
-| Errores | Prop `error` o `errorMessage` | variant="error", outline-error |
-| Iconos | lucide-react | SVGs inline |
+| Tamaños   | sm, default, lg                                 | xs, md, xl, icon-sm, icon-lg               |
+| Errores   | Prop `error` o `errorMessage`                   | variant="error", outline-error             |
+| Iconos    | lucide-react                                    | SVGs inline                                |
 
 **Revisión de Storybook:**
 

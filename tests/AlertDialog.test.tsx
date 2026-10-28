@@ -18,13 +18,7 @@ import {
 import { Button } from '../src/components/Button';
 import { ThemeProvider } from '../src/components/Themes';
 
-const Confirmation = ({
-  onAction,
-  onCancel,
-}: {
-  onAction?: () => void;
-  onCancel?: () => void;
-}) => (
+const Confirmation = ({ onAction, onCancel }: { onAction?: () => void; onCancel?: () => void }) => (
   <AlertDialog>
     <AlertDialogTrigger asChild>
       <Button>Delete</Button>
@@ -32,9 +26,7 @@ const Confirmation = ({
     <AlertDialogContent>
       <AlertDialogHeader>
         <AlertDialogTitle>Delete project?</AlertDialogTitle>
-        <AlertDialogDescription>
-          This action cannot be undone.
-        </AlertDialogDescription>
+        <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>

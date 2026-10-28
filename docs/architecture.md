@@ -2,19 +2,19 @@
 
 ## Visión general
 
-Librería de componentes de UI para React 18 + TypeScript, construida con Tailwind CSS, Radix UI y CVA (class-variance-authority), siguiendo los patrones de **shadcn/ui**.
+Librería de componentes de UI para React 19 (compatible con 18.3+) + TypeScript, construida con Tailwind CSS 4, Radix UI y CVA (class-variance-authority), siguiendo los patrones de **shadcn/ui**.
 
-| Área          | Tecnología                               |
-| ------------- | ---------------------------------------- |
-| UI            | React 18 + TypeScript (strict)           |
-| Estilos       | Tailwind CSS 3.4 + variables CSS         |
-| Variantes     | `class-variance-authority` (CVA)         |
-| Primitivas    | Radix UI (`@radix-ui/react-*`)           |
-| Iconos        | `lucide-react`                           |
-| Build         | Vite 6 + `vite-plugin-dts`               |
-| Documentación | Storybook 8 (CSF 3)                      |
-| Testing       | Vitest + Testing Library + `axe-core`    |
-| Calidad       | ESLint 9 + Prettier + Husky + commitlint |
+| Área          | Tecnología                                   |
+| ------------- | -------------------------------------------- |
+| UI            | React 19 + TypeScript (strict)               |
+| Estilos       | Tailwind CSS 4 + variables CSS               |
+| Variantes     | `class-variance-authority` (CVA)             |
+| Primitivas    | Radix UI (`@radix-ui/react-*`)               |
+| Iconos        | `lucide-react` 1.x                           |
+| Build         | Vite 8 + `vite-plugin-dts`                   |
+| Documentación | Storybook 10 (CSF 3)                         |
+| Testing       | Vitest 5 + Testing Library + `axe-core`      |
+| Calidad       | ESLint 10 + Prettier + Husky + commitlint 21 |
 
 ## Principios
 
@@ -53,14 +53,14 @@ libreria-componentes/
 │   ├── lib/
 │   │   └── utils.ts          # cn() = twMerge(clsx(...))
 │   ├── index.ts              # Entry point: export * from './components'
-│   └── index.css             # @tailwind + variables CSS base y paletas
+│   └── index.css             # @import 'tailwindcss' + @config + variables y paletas
 ├── stories/                  # Storybook (un .stories.tsx por componente)
 │   └── templates/            # Plantillas de página completas (Templates/*)
 ├── tests/                    # Vitest (un .test.tsx por componente) + setup.ts
 ├── tailwind.config.cjs       # Mapea CSS vars a utilidades Tailwind
 ├── vite.config.ts            # Build de librería + configuración de Vitest
 ├── tsconfig.json             # strict + path alias @/*
-├── eslint.config.js          # Flat config (ESLint 9)
+├── eslint.config.js          # Flat config (ESLint 10)
 └── package.json
 ```
 
@@ -192,6 +192,7 @@ tailwind.config.cjs ──► hsl(var(--background)) ──► Componentes (bg-b
 - `ThemeProvider` lee el modo desde `localStorage` (`theme-color-mode` por defecto), mergea en profundidad base + paleta + `defaultTheme` + overrides de `setTheme` (`DeepPartial<Theme>`), y expone `useTheme()`.
 - Los colores de `defaultTheme.ts`/`palettes.ts` se escriben **con** `hsl(...)`; `ThemeProvider` elimina el wrapper al generar las variables, porque `tailwind.config.cjs` ya aplica `hsl(var(--...))`.
 - `src/index.css` contiene los valores por defecto en `:root`/`.dark` (formato HSL crudo) para usar la librería sin `ThemeProvider`.
+- **Tailwind 4**: `src/index.css` arranca con `@import 'tailwindcss'`, `@import 'tw-animate-css'` y `@config '../tailwind.config.cjs'`; el `tailwind.config.cjs` sigue siendo la fuente de tokens que mapea `hsl(var(--...))`. Una capa `@layer base` restaura el `border-color: hsl(var(--border))` que v3 aplicaba por defecto (v4 usa `currentColor`).
 - **Portales**: `PortalContainerProvider` crea un nodo en `<body>` con las clases `${colorMode} theme-${palette}`; `Dialog`, `Drawer`, `Select`, `DropdownMenu` y `Popover` lo obtienen con `usePortalContainer()` y lo pasan al `container` de Radix. Así los overlays conservan la paleta y los overrides sin tocar `<html>`.
 - `applyToRoot` (opt-in) replica clases y variables en `document.documentElement` para portales de terceros o para tematizar el documento completo; restaura los valores previos al desmontar.
 

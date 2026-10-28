@@ -55,11 +55,7 @@ const Section = React.forwardRef<HTMLElement, SectionProps>(
     const shouldWrap = container && !bleed && !asChild;
 
     return (
-      <Comp
-        ref={ref}
-        className={cn(sectionVariants({ spacing, surface }), className)}
-        {...props}
-      >
+      <Comp ref={ref} className={cn(sectionVariants({ spacing, surface }), className)} {...props}>
         {shouldWrap ? (
           <Container size={width} padding="md">
             {children}

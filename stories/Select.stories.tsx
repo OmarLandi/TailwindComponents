@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState, type FC } from 'react';
 import { SelectField, type SelectFieldProps } from '../src/components/Select';
 

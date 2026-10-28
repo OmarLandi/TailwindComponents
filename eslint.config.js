@@ -1,6 +1,9 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from 'eslint-plugin-storybook';
+
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import react from 'eslint-plugin-react';
+import eslintReact from '@eslint-react/eslint-plugin';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
@@ -11,7 +14,7 @@ export default tseslint.config(
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
-      react,
+      '@eslint-react': eslintReact,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
     },
@@ -22,22 +25,24 @@ export default tseslint.config(
       },
     },
     rules: {
-      ...react.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+      // Hooks (the compiler rule set from v7 is opt-in and not enabled here)
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': 'off',
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
+      // JSX/DOM correctness (replaces eslint-plugin-react, incompatible with ESLint 10)
+      '@eslint-react/no-missing-key': 'error',
+      '@eslint-react/no-duplicate-key': 'error',
+      '@eslint-react/no-direct-mutation-state': 'error',
+      '@eslint-react/dom-no-unknown-property': 'error',
+      '@eslint-react/dom-no-dangerously-set-innerhtml-with-children': 'error',
+      '@eslint-react/dom-no-unsafe-target-blank': 'error',
+      '@eslint-react/dom-no-find-dom-node': 'error',
+      '@eslint-react/jsx-no-children-prop': 'error',
+      '@eslint-react/jsx-no-comment-textnodes': 'error',
     },
   },
   {
@@ -63,5 +68,6 @@ export default tseslint.config(
       '*.config.js',
       '*.config.ts',
     ],
-  }
+  },
+  storybook.configs['flat/recommended']
 );

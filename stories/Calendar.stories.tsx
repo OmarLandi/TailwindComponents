@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 
@@ -168,7 +168,10 @@ export const Mobile: Story = {
   render: args => (
     <Calendar {...(args as SingleArgs)} mode="single" className="rounded-md border bg-card" />
   ),
-  parameters: {
-    viewport: { defaultViewport: 'mobile' },
+  globals: {
+    viewport: {
+      value: 'mobile',
+      isRotated: false
+    }
   },
 };

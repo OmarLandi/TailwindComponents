@@ -13,6 +13,7 @@ globalThis.IntersectionObserver ??= class IntersectionObserver {
   root: Element | null = null;
   rootMargin: string = '';
   thresholds: ReadonlyArray<number> = [];
+  scrollMargin = '';
   takeRecords(): IntersectionObserverEntry[] {
     return [];
   }

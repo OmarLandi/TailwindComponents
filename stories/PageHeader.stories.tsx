@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { Button } from '../src/components/Button';
 import { PageHeader } from '../src/components/PageHeader';
@@ -78,7 +78,10 @@ export const Mobile: Story = {
       </>
     ),
   },
-  parameters: {
-    viewport: { defaultViewport: 'mobile1' },
+  globals: {
+    viewport: {
+      value: 'mobile1',
+      isRotated: false
+    }
   },
 };

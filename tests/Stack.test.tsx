@@ -21,13 +21,7 @@ describe('Stack', () => {
     );
     const root = container.firstChild;
 
-    expect(root).toHaveClass(
-      'flex-row',
-      'gap-6',
-      'items-center',
-      'justify-between',
-      'flex-wrap'
-    );
+    expect(root).toHaveClass('flex-row', 'gap-6', 'items-center', 'justify-between', 'flex-wrap');
   });
 
   it('renders as child using Slot', () => {

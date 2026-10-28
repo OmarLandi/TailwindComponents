@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FolderOpen, Inbox, SearchX } from 'lucide-react';
 
 import { Button } from '../src/components/Button';
@@ -76,13 +76,12 @@ export const Mobile: Story = {
     description: 'Start a conversation and it will appear in this list.',
     icon: <Inbox />,
     variant: 'muted',
-    action: (
-      <Button fullWidth>
-        New message
-      </Button>
-    ),
+    action: <Button fullWidth>New message</Button>,
   },
-  parameters: {
-    viewport: { defaultViewport: 'mobile1' },
+  globals: {
+    viewport: {
+      value: 'mobile1',
+      isRotated: false
+    }
   },
 };

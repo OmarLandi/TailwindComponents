@@ -7,8 +7,10 @@ description: Use when creating or fixing Storybook stories, CSF 3 metadata, cont
 
 ## Configuración real
 
-- Storybook 8 con `@storybook/react-vite`.
-- `.storybook/main.ts`: stories en `../stories/**/*.stories.tsx` y `../stories/docs/*.mdx`; autodocs por tag; addons `essentials`, `interactions`, `links`, `a11y`, `themes`.
+- Storybook 10 con `@storybook/react-vite` (ESM-only).
+- `.storybook/main.ts`: stories en `../stories/**/*.stories.tsx` y `../stories/docs/*.mdx`; autodocs por tag; addons `links`, `a11y`, `themes`, `mcp`, `docs`.
+- MDX: importa `Meta` desde `@storybook/addon-docs/blocks` (no `@storybook/blocks`).
+- `docs.autodocs` ya no existe: cada meta debe declarar `tags: ['autodocs']`.
 - `.storybook/preview.tsx`: decorador global con `ThemeProvider`, toolbar **Color Mode**
   (light/dark) + **Palette** (13 paletas) y viewports **Mobile 375 / Tablet 768 / Desktop 1280**.
   El decorador respeta `parameters.layout: 'fullscreen'` (sin padding ni `min-h-screen`).

@@ -86,11 +86,7 @@ const AppShell = React.forwardRef<HTMLDivElement, AppShellProps>(
         {skipLink && <SkipLink href={`#${mainId}`}>{skipLabel}</SkipLink>}
         {header && (
           <div
-            className={cn(
-              'z-40 bg-background',
-              headerSticky && 'sticky top-0',
-              headerClassName
-            )}
+            className={cn('z-40 bg-background', headerSticky && 'sticky top-0', headerClassName)}
           >
             {header}
           </div>

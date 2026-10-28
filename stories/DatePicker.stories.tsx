@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 
 import { DatePicker } from '../src/components/DatePicker';
@@ -159,7 +159,10 @@ export const Mobile: Story = {
     fromYear: 1920,
     toYear: 2026,
   },
-  parameters: {
-    viewport: { defaultViewport: 'mobile' },
+  globals: {
+    viewport: {
+      value: 'mobile',
+      isRotated: false
+    }
   },
 };

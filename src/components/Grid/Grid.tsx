@@ -91,19 +91,7 @@ export interface GridProps
 }
 
 const Grid = React.forwardRef<HTMLDivElement, GridProps>(
-  (
-    {
-      className,
-      columns,
-      gap,
-      align,
-      minItemWidth,
-      asChild = false,
-      style,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, columns, gap, align, minItemWidth, asChild = false, style, ...props }, ref) => {
     const Comp = asChild ? Slot : 'div';
     const columnProps =
       typeof columns === 'object'

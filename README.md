@@ -1,8 +1,8 @@
 # Librería de Componentes React
 
-Librería de componentes de UI construida con **React 18**, **TypeScript**, **Tailwind CSS**, **Radix UI** y **Storybook**, siguiendo los patrones de **shadcn/ui**. Diseñada para **componer páginas completas**, no solo primitivas aisladas.
+Librería de componentes de UI construida con **React 19**, **TypeScript**, **Tailwind CSS 4**, **Radix UI** y **Storybook 10**, siguiendo los patrones de **shadcn/ui**. Diseñada para **componer páginas completas**, no solo primitivas aisladas.
 
-- 49 componentes listos para producción + capa de layout incluida
+- 102 componentes listos para producción + capa de layout incluida
 - Responsive mobile-first (320–1536 px), targets ≥44 px y soporte `dvh`/safe areas
 - Accesibilidad WCAG 2.2 AA verificada con `axe-core` en todos los componentes
 - Sistema de theming con variables CSS (light/dark + 13 paletas)
@@ -23,7 +23,7 @@ El consumidor debe tener instaladas:
 npm install react react-dom @radix-ui/react-slot
 ```
 
-> Requisitos: React 18+, Node.js 18+ y Tailwind CSS 3.4+ si vas a personalizar estilos.
+> Requisitos: React 18 o 19 y Tailwind CSS 4 si vas a personalizar estilos. El CSS compilado ya incluye todas las utilidades que usan los componentes. Para desarrollar la librería necesitas Node.js 22.22+ (lo exigen Vite 8, jsdom 30 y release-it 21).
 
 ## Uso Rápido
 
@@ -230,8 +230,8 @@ src/components/<Nombre>/index.ts       # Export del componente y tipos
 src/components/index.ts                # Barrel export
 src/lib/utils.ts                       # cn() (clsx + tailwind-merge)
 src/components/Themes/                 # ThemeProvider, paletas y tipos
-tailwind.config.cjs                    # Mapea CSS vars a utilidades
-src/index.css                          # Variables CSS base y paletas
+tailwind.config.cjs                    # Tokens Tailwind (cargado vía @config)
+src/index.css                          # @import 'tailwindcss', variables y paletas
 stories/                               # Documentación (Storybook CSF)
 tests/                                 # Vitest + Testing Library + axe-core
 e2e/                                   # Playwright: overflow + screenshots de plantillas

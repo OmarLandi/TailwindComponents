@@ -22,7 +22,7 @@ const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
           dropdown_root:
             'relative inline-flex items-center rounded-md has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background',
           dropdown:
-            'h-11 rounded-md border border-input bg-background px-2 text-sm font-medium text-foreground shadow-sm focus-visible:outline-none disabled:opacity-50',
+            'h-11 rounded-md border border-input bg-background px-2 text-sm font-medium text-foreground shadow-xs focus-visible:outline-none disabled:opacity-50',
           months_dropdown: 'ps-2 pe-6',
           years_dropdown: 'ps-2 pe-6',
           nav: 'absolute inset-x-0 top-0 flex items-center justify-between px-1',

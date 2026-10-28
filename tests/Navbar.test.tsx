@@ -111,7 +111,7 @@ describe('Navbar', () => {
         <NavbarContainer>Content</NavbarContainer>
       </Navbar>
     );
-    expect(screen.getByRole('banner')).toHaveClass('shadow-sm');
+    expect(screen.getByRole('banner')).toHaveClass('shadow-xs');
   });
 
   it('renders with custom className', () => {

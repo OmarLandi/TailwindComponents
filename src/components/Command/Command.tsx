@@ -2,12 +2,7 @@ import * as React from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from '@/components/Dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/Dialog';
 import { cn } from '@/lib/utils';
 
 const Command = React.forwardRef<
@@ -25,8 +20,7 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-export interface CommandDialogProps
-  extends React.ComponentPropsWithoutRef<typeof Dialog> {
+export interface CommandDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
   title?: string;
   description?: string;
   className?: string;

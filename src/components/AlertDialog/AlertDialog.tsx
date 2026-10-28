@@ -14,10 +14,7 @@ const AlertDialogPortal: React.FC<
   const portalContainer = usePortalContainer();
 
   return (
-    <AlertDialogPrimitive.Portal
-      container={container ?? portalContainer ?? undefined}
-      {...props}
-    />
+    <AlertDialogPrimitive.Portal container={container ?? portalContainer ?? undefined} {...props} />
   );
 };
 AlertDialogPortal.displayName = 'AlertDialogPortal';
@@ -101,8 +98,9 @@ const AlertDialogDescription = React.forwardRef<
 ));
 AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayName;
 
-interface AlertDialogActionProps
-  extends React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action> {
+interface AlertDialogActionProps extends React.ComponentPropsWithoutRef<
+  typeof AlertDialogPrimitive.Action
+> {
   variant?: 'default' | 'destructive' | 'secondary' | 'accent' | 'outline' | 'ghost' | 'link';
   size?: 'sm' | 'default' | 'lg' | 'icon' | 'xl';
 }

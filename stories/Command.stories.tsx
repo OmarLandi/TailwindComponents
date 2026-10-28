@@ -1,13 +1,6 @@
 import * as React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import {
-  CalendarDays,
-  CreditCard,
-  FileText,
-  Folder,
-  Settings,
-  User,
-} from 'lucide-react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { CalendarDays, CreditCard, FileText, Folder, Settings, User } from 'lucide-react';
 
 import {
   Command,
@@ -87,10 +80,7 @@ const CommandContent = () => (
 
 export const Playground: Story = {
   render: () => (
-    <Command
-      label="Command menu"
-      className="max-w-md rounded-lg border border-border shadow-md"
-    >
+    <Command label="Command menu" className="max-w-md rounded-lg border border-border shadow-md">
       <CommandContent />
     </Command>
   ),
@@ -130,14 +120,14 @@ export const CommandDialogStory: Story = {
 
 export const Mobile: Story = {
   render: () => (
-    <Command
-      label="Command menu"
-      className="w-full rounded-lg border border-border shadow-md"
-    >
+    <Command label="Command menu" className="w-full rounded-lg border border-border shadow-md">
       <CommandContent />
     </Command>
   ),
-  parameters: {
-    viewport: { defaultViewport: 'mobile1' },
+  globals: {
+    viewport: {
+      value: 'mobile1',
+      isRotated: false
+    }
   },
 };

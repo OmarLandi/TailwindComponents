@@ -10,13 +10,13 @@ componentes customizables, responsive y accesibles, incluyendo modelos de layout
 
 - Base sÃ³lida de primitivas Radix (foco, teclado, portales) y CVA para variantes.
 - Theming por variables CSS con 13 paletas, dark mode y portales tematizados.
-- 52 archivos de test / 402 tests, con `axe-core` en todos; `tsc` y ESLint limpios.
-- Storybook 8 con toolbar de color/paleta, addon a11y y autodocs.
+- 104 archivos de test / 520 tests, con `axe-core` en todos; `tsc` y ESLint limpios.
+- Storybook 10 con toolbar de color/paleta, addon a11y y autodocs.
 - Build ESM + CJS + CSS y exports correctos.
 
 **Brechas críticas (foto 2026-10-21; ver actualizaciones)**
 
-1. **La capa de layout, las plantillas y la regresion visual ya existen.** Quedan las primitivas `AspectRatio`, `ScrollArea` y `Separator`, y los componentes de datos del roadmap.
+1. **La capa de layout, las plantillas y la regresion visual ya existen.** `AspectRatio`, `ScrollArea` y `Separator` implementados; quedan componentes de datos del roadmap.
 2. **La responsividad de las plantillas se verifica con Playwright.** Las historias no-plantilla siguen usando anchos fijos (`w-[300px]`, `w-[350px]`) y no tienen test de overflow.
 3. **La accesibilidad de overlays no se audita.** Varios tests ejecutan `axe.run(container)`
    cuando el diÃ¡logo vive fuera de ese contenedor (portal), por lo que el test pasa sin auditar
@@ -42,20 +42,20 @@ componentes customizables, responsive y accesibles, incluyendo modelos de layout
 
 > **Actualizacion 2026-10-22:** se anadieron `Field`, `Form`, `AlertDialog`, `Command`,
 > `EmptyState` y la capa de layout (`Stack`, `Grid`, `Section`, `PageHeader`, `AppShell`,
-> `Prose`, `SkipLink`, `VisuallyHidden`); plantillas `Templates/*` y un smoke test axe; inventario de 49 componentes y **52 archivos /
-> 402 tests**; Playwright cubre las plantillas a 375/768/1280 (33 casos).
+> `Prose`, `SkipLink`, `VisuallyHidden`); plantillas `Templates/*` y un smoke test axe; inventario de 102 componentes y **52 archivos /
+> 520 tests**; Playwright cubre las plantillas a 375/768/1280 (33 casos).
 
 ## 2. Contrato de calidad propuesto
 
 Toda contribuciÃ³n debe cumplir:
 
-| Eje              | Contrato                                                                                                                                                          |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Responsive**   | Mobile-first; soporte 320â€“1536 px; sin scroll horizontal de pÃ¡gina; targets â‰¥ 44 px; `dvh` y `env(safe-area-inset-*)`.                                       |
-| **Accesible**    | WCAG 2.2 AA; HTML semÃ¡ntico; teclado completo; foco visible; nombres accesibles; contraste 4.5:1 / 3:1; `motion-reduce`.                                         |
-| **Customizable** | Tokens semÃ¡nticos, CVA, `asChild` cuando aplique, `className`/`ref`, composiciÃ³n; cero anchos fijos de pÃ¡gina y cero hex/rgb.                                  |
-| **Layout**       | Implementados: `AppShell`, `Grid`, `PageHeader`, `Prose`, `Section`, `SkipLink`, `Stack`, `VisuallyHidden`. Pendientes: `AspectRatio`, `ScrollArea`, `Separator`. |
-| **Verificable**  | Story con viewports 375/768/1280, `axe` sobre `document.body` cuando hay portales, test de teclado, RTL y reduced motion.                                         |
+| Eje              | Contrato                                                                                                                                                             |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Responsive**   | Mobile-first; soporte 320â€“1536 px; sin scroll horizontal de pÃ¡gina; targets â‰¥ 44 px; `dvh` y `env(safe-area-inset-*)`.                                          |
+| **Accesible**    | WCAG 2.2 AA; HTML semÃ¡ntico; teclado completo; foco visible; nombres accesibles; contraste 4.5:1 / 3:1; `motion-reduce`.                                            |
+| **Customizable** | Tokens semÃ¡nticos, CVA, `asChild` cuando aplique, `className`/`ref`, composiciÃ³n; cero anchos fijos de pÃ¡gina y cero hex/rgb.                                     |
+| **Layout**       | Implementados: `AppShell`, `Grid`, `PageHeader`, `Prose`, `Section`, `SkipLink`, `Stack`, `VisuallyHidden`. Implementados: `AspectRatio`, `ScrollArea`, `Separator`. |
+| **Verificable**  | Story con viewports 375/768/1280, `axe` sobre `document.body` cuando hay portales, test de teclado, RTL y reduced motion.                                            |
 
 ## 3. Hallazgos transversales
 
@@ -170,13 +170,13 @@ Toda contribuciÃ³n debe cumplir:
 
 ## 5. Componentes y patrones faltantes
 
-| Ãrea            | Faltantes prioritarios                                                                                                                                            |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Formularios** | `Label`, `MultiSelect`/`TagInput`, `SearchInput`, `PasswordInput`, `NumberInput`, `FileUpload`, `DateRangePicker`/`TimePicker`.                                   |
-| **Overlays**    | `ContextMenu`, `Menubar`, `NavigationMenu`, `HoverCard`, `Sheet`/`BottomSheet`.                                                                                   |
-| **Datos**       | `DataTable` (sort/filter/selection/column visibility), `ErrorState`/`Result`, `Chart`, `TreeView`, `Timeline`, `Stat`/KPI.                                        |
-| **Layout**      | Implementados: `AppShell`, `Grid`, `PageHeader`, `Prose`, `Section`, `SkipLink`, `Stack`, `VisuallyHidden`. Pendientes: `AspectRatio`, `ScrollArea`, `Separator`. |
-| **Utilidades**  | `useMediaQuery`/`useBreakpoint`, `DirectionProvider` (RTL), `ThemeScript` (anti-FOUC), `Toast` queue manager, `useToast`.                                         |
+| Ãrea            | Faltantes prioritarios                                                                                                                                               |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Formularios** | `Label`, `MultiSelect`/`TagInput`, `SearchInput`, `PasswordInput`, `NumberInput`, `FileUpload`, `DateRangePicker`/`TimePicker`.                                      |
+| **Overlays**    | `ContextMenu`, `Menubar`, `NavigationMenu`, `HoverCard`, `Sheet`/`BottomSheet`.                                                                                      |
+| **Datos**       | `DataTable` (sort/filter/selection/column visibility), `ErrorState`/`Result`, `Chart`, `TreeView`, `Timeline`, `Stat`/KPI.                                           |
+| **Layout**      | Implementados: `AppShell`, `Grid`, `PageHeader`, `Prose`, `Section`, `SkipLink`, `Stack`, `VisuallyHidden`. Implementados: `AspectRatio`, `ScrollArea`, `Separator`. |
+| **Utilidades**  | `useMediaQuery`/`useBreakpoint`, `DirectionProvider` (RTL), `ThemeScript` (anti-FOUC), `Toast` queue manager, `useToast`.                                            |
 
 > **Comparativa de catalogo (2026-10-21):** revisados Material UI v9, shadcn/ui y Radix
 > Primitives. Ya estan cubiertos los patrones base (accordion, alert, avatar, badge,

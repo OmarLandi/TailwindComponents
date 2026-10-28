@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Bell, LayoutDashboard, Settings, Users } from 'lucide-react';
 
 import { AppShell } from '../src/components/AppShell';
@@ -122,7 +122,10 @@ export const CollapsedSidebar: Story = {
 
 export const Mobile: Story = {
   args: shellArgs,
-  parameters: {
-    viewport: { defaultViewport: 'mobile1' },
+  globals: {
+    viewport: {
+      value: 'mobile1',
+      isRotated: false
+    }
   },
 };

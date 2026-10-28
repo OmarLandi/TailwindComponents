@@ -10,7 +10,7 @@ const themesVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm',
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         outline:
           'border-2 border-primary bg-background hover:bg-primary hover:text-primary-foreground',

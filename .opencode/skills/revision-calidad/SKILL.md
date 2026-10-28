@@ -92,16 +92,12 @@ Criterio de aceptación: los tres en verde. Si fallan, es bloqueante.
 
 Señálala si el diff la toca o la empeora (detalle completo en `docs/component-audit.md`):
 
-1. 31 componentes sin trackear en git.
-2. Warnings de Radix en tests de `Dialog`/`Drawer`.
-3. `@axe-core/react` sin uso real.
-4. `.lintstagedrc` no usado por el pre-commit.
-5. El bundle publica todas las dependencias de runtime (~615 KB / 146 KB gzip).
-6. Sin capa de layout/plantillas (`Stack`, `Grid`, `Section`, `PageHeader`, `AppShell`,
-   `Prose`, `SkipLink`) ni viewports en Storybook.
-7. Contraste AA insuficiente en `warning`/`info`/`success`/`destructive`/muted y varias paletas.
-8. P0: Combobox sin teclado/listbox, nav móvil no modal, `Button asChild` roto, `Slider`
-   callback pisado, errores de InputOTP/Select sin asociar, `Table` scroll no focusable.
+1. Componentes, stories y tests sin trackear en git.
+2. Warnings de Radix en tests de `Dialog`/`Drawer` si falta `DialogTitle` o `DialogDescription`.
+3. Cualquier regla nueva de `@eslint-react` debe declararse explícitamente en `eslint.config.js`;
+   no se activa `recommended-typescript` porque incluye reglas del React Compiler.
+4. Tailwind 4 + `tailwind-merge` 3 pendientes (migración grande, recalcula todas las capturas).
+5. React 19 pendiente: ampliar peers a `^18.3.0 || ^19.0.0` y validar.
 
 Invariantes ya corregidos (no los reintroduzcas): selector `.colorMode.theme-palette` en el `<style>`, merge profundo de `DeepPartial<Theme>`, paletas en HSL crudo, `stone` con `.theme-stone`, portales vía `usePortalContainer()` y build con `dist/index.mjs` / `dist/index.cjs` / `dist/index.css`.
 

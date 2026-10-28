@@ -61,7 +61,7 @@ describe('Button', () => {
 
 ## Reglas obligatorias
 
-- **`axe.run(container)` en cada componente.** No uses `toHaveNoViolations` ni `@axe-core/react`.
+- **`axe.run(container)` en cada componente.** No uses `toHaveNoViolations`; `@axe-core/react` no está instalado.
 - **Portales**: si el componente renderiza en un portal (Dialog, Drawer, Select, DropdownMenu,
   Popover, Toast), abre el overlay y audita `axe.run(document.body)` (o el nodo
   `[data-theme-portal]`). `axe.run(container)` pasa aunque el portal tenga violaciones.

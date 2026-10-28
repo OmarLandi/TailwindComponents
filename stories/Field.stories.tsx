@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AtSign, Mail } from 'lucide-react';
 
 import {
@@ -166,7 +166,10 @@ export const Mobile: Story = {
       </Field>
     </div>
   ),
-  parameters: {
-    viewport: { defaultViewport: 'mobile1' },
+  globals: {
+    viewport: {
+      value: 'mobile1',
+      isRotated: false
+    }
   },
 };

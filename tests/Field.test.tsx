@@ -56,10 +56,7 @@ describe('Field', () => {
 
     const input = screen.getByRole('textbox');
     expect(input).toHaveAttribute('aria-invalid', 'true');
-    expect(input).toHaveAttribute(
-      'aria-describedby',
-      'username-description username-error'
-    );
+    expect(input).toHaveAttribute('aria-describedby', 'username-description username-error');
 
     const error = screen.getByRole('alert');
     expect(error).toHaveTextContent('This username is already taken.');

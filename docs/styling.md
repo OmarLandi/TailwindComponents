@@ -6,15 +6,16 @@ La librería combina **Tailwind CSS** (utility-first), **variables CSS** (themin
 
 ## Librerías
 
-| Librería                   | Versión | Uso                                            |
-| -------------------------- | ------- | ---------------------------------------------- |
-| `tailwindcss`              | ^3.4.17 | Utilidades y mapeo de CSS variables            |
-| `tailwindcss-animate`      | ^1.0.7  | Animaciones (`animate-in`, `accordion-*`, ...) |
-| `tailwind-merge`           | ^2.6.0  | Resolución de conflictos de clases             |
-| `clsx`                     | ^2.1.1  | Composición condicional de clases              |
-| `class-variance-authority` | ^0.7.1  | Definición de variantes                        |
+| Librería                   | Versión | Uso                                                         |
+| -------------------------- | ------- | ----------------------------------------------------------- |
+| `tailwindcss`              | ^4.3    | Utilidades y mapeo de CSS variables                         |
+| `@tailwindcss/postcss`     | ^4.3    | Pipeline PostCSS (sustituye `tailwindcss` + `autoprefixer`) |
+| `tw-animate-css`           | ^1.4    | Animaciones v4 (`animate-in`, `accordion-*`, ...)           |
+| `tailwind-merge`           | ^3.7    | Resolución de conflictos de clases (v3 = Tailwind 4)        |
+| `clsx`                     | ^2.1.1  | Composición condicional de clases                           |
+| `class-variance-authority` | ^0.7.1  | Definición de variantes                                     |
 
-> `tailwind.config.cjs` es CommonJS (`.cjs`) porque el proyecto es ESM (`"type": "module"`).
+> `tailwind.config.cjs` es CommonJS (`.cjs`) porque el proyecto es ESM (`"type": "module"`). Tailwind 4 lo carga desde CSS con `@config '../tailwind.config.cjs'`; `postcss.config.cjs` solo registra `@tailwindcss/postcss`.
 
 ## `cn()` — utilidad principal
 
@@ -99,6 +100,23 @@ palettes.ts / defaultTheme.ts        (colores con hsl(...))
 - Si guardas `hsl(...)` en la variable, el resultado es `hsl(hsl(...))`, que es **CSS inválido**.
 - `defaultTheme.ts` y `palettes.ts` escriben los colores con `hsl(...)` porque `ThemeProvider` elimina el wrapper (`stripHsl`) antes de generar las variables.
 - En `src/index.css` los valores deben ir **sin** wrapper.
+
+### Tailwind 4: entrada CSS y escalas
+
+`src/index.css` es el punto de entrada y empieza así:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@config '../tailwind.config.cjs';
+```
+
+- **`@config`** mantiene `tailwind.config.cjs` como fuente de tokens (`colors`, `radius`, `safelist`) mientras no se migre a `@theme`. No declares `keyframes`/`animation` en el config: Tailwind los genera sin archivo de origen y Vite avisa de que PostCSS no recibió la opción `from`. `tw-animate-css` ya aporta `--animate-accordion-down/up` y sus `@keyframes`.
+- **`border-color`**: v4 usa `currentColor` por defecto. La capa base de `src/index.css` restaura `border-color: hsl(var(--border))` para que `border` sin color siga funcionando como en v3.
+- **Escalas renombradas**: `shadow-sm` (v3) → `shadow-xs` (v4); `shadow` (v3) → `shadow-sm` (v4). Igual con blur: `backdrop-blur-sm` (v3) → `backdrop-blur-xs` (v4). Revisa cualquier clase nueva contra la escala de v4.
+- **Animaciones**: `tw-animate-css` aporta `animate-in`/`animate-out`, `fade-*`, `slide-*`, `zoom-*` y `accordion-*`. `tailwindcss-animate` no es compatible con v4 y fue eliminado.
+- **PostCSS**: solo `@tailwindcss/postcss`; v4 incluye el prefijado, así que `autoprefixer` ya no se instala.
+- **Interlineado**: en v4 las utilidades `leading-*` se emiten después de `text-*`, por lo que `text-sm leading-relaxed` sí aplica el interlineado relajado (en v3 lo pisaba `text-sm`).
 
 ### `ThemeProvider`
 
@@ -186,6 +204,6 @@ Ver también `AGENTS.md` → "Deuda técnica conocida" para las inconsistencias 
 ## Recursos
 
 - [Tailwind CSS](https://tailwindcss.com/docs)
-- [tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate)
+- [tw-animate-css](https://github.com/Wombosvideo/tw-animate-css)
 - [class-variance-authority](https://cva.style/docs)
 - [shadcn/ui theming](https://ui.shadcn.com/docs/theming)

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { ToggleGroup, ToggleGroupItem } from '../src/components/ToggleGroup';
 import { Bold, Italic, Underline } from 'lucide-react';

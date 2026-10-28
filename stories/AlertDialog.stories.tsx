@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Trash2 } from 'lucide-react';
 
 import {
@@ -46,8 +46,7 @@ export const Playground: Story = {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete project?</AlertDialogTitle>
           <AlertDialogDescription>
-            This permanently deletes the project and all of its files. This action cannot be
-            undone.
+            This permanently deletes the project and all of its files. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -103,7 +102,10 @@ export const Mobile: Story = {
       </AlertDialogContent>
     </AlertDialog>
   ),
-  parameters: {
-    viewport: { defaultViewport: 'mobile1' },
+  globals: {
+    viewport: {
+      value: 'mobile1',
+      isRotated: false
+    }
   },
 };

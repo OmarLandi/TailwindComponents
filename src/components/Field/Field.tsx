@@ -39,15 +39,7 @@ export interface FieldProps
 
 const Field = React.forwardRef<HTMLDivElement, FieldProps>(
   (
-    {
-      className,
-      orientation,
-      id,
-      invalid = false,
-      disabled = false,
-      required = false,
-      ...props
-    },
+    { className, orientation, id, invalid = false, disabled = false, required = false, ...props },
     ref
   ) => {
     const generatedId = React.useId();
@@ -80,39 +72,39 @@ const Field = React.forwardRef<HTMLDivElement, FieldProps>(
 );
 Field.displayName = 'Field';
 
-export interface FieldLabelProps
-  extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
+export interface FieldLabelProps extends React.ComponentPropsWithoutRef<
+  typeof LabelPrimitive.Root
+> {
   required?: boolean;
 }
 
-const FieldLabel = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  FieldLabelProps
->(({ className, children, htmlFor, required, ...props }, ref) => {
-  const field = useFieldContext();
-  const isRequired = required ?? field?.required ?? false;
+const FieldLabel = React.forwardRef<React.ElementRef<typeof LabelPrimitive.Root>, FieldLabelProps>(
+  ({ className, children, htmlFor, required, ...props }, ref) => {
+    const field = useFieldContext();
+    const isRequired = required ?? field?.required ?? false;
 
-  return (
-    <LabelPrimitive.Root
-      ref={ref}
-      htmlFor={htmlFor ?? field?.id}
-      data-disabled={field?.disabled || undefined}
-      data-invalid={field?.invalid || undefined}
-      className={cn(
-        'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-[disabled=true]:opacity-50',
-        className
-      )}
-      {...props}
-    >
-      {children}
-      {isRequired && (
-        <span className="ms-1 text-destructive" aria-hidden="true">
-          *
-        </span>
-      )}
-    </LabelPrimitive.Root>
-  );
-});
+    return (
+      <LabelPrimitive.Root
+        ref={ref}
+        htmlFor={htmlFor ?? field?.id}
+        data-disabled={field?.disabled || undefined}
+        data-invalid={field?.invalid || undefined}
+        className={cn(
+          'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 data-[disabled=true]:opacity-50',
+          className
+        )}
+        {...props}
+      >
+        {children}
+        {isRequired && (
+          <span className="ms-1 text-destructive" aria-hidden="true">
+            *
+          </span>
+        )}
+      </LabelPrimitive.Root>
+    );
+  }
+);
 FieldLabel.displayName = 'FieldLabel';
 
 const FieldDescription = React.forwardRef<
@@ -134,8 +126,7 @@ FieldDescription.displayName = 'FieldDescription';
 
 export type FieldErrorItem = string | { message?: React.ReactNode };
 
-export interface FieldErrorProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface FieldErrorProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
   children?: React.ReactNode;
   errors?: FieldErrorItem[];
 }
@@ -185,15 +176,16 @@ const FieldGroup = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 FieldGroup.displayName = 'FieldGroup';
 
-const FieldSet = React.forwardRef<HTMLFieldSetElement, React.FieldsetHTMLAttributes<HTMLFieldSetElement>>(
-  ({ className, ...props }, ref) => (
-    <fieldset
-      ref={ref}
-      className={cn('m-0 flex min-w-0 flex-col gap-4 border-0 p-0', className)}
-      {...props}
-    />
-  )
-);
+const FieldSet = React.forwardRef<
+  HTMLFieldSetElement,
+  React.FieldsetHTMLAttributes<HTMLFieldSetElement>
+>(({ className, ...props }, ref) => (
+  <fieldset
+    ref={ref}
+    className={cn('m-0 flex min-w-0 flex-col gap-4 border-0 p-0', className)}
+    {...props}
+  />
+));
 FieldSet.displayName = 'FieldSet';
 
 const fieldLegendVariants = cva('mb-1 font-semibold', {

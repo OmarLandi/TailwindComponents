@@ -2,7 +2,9 @@
 
 ## Visión general
 
-El proyecto usa **Storybook 8** (`@storybook/react-vite`) para documentar, probar y visualizar los componentes. Las stories se escriben en **Component Story Format 3 (CSF 3)** con TypeScript.
+El proyecto usa **Storybook 10** (`@storybook/react-vite`) para documentar, probar y visualizar los componentes. Las stories se escriben en **Component Story Format 3 (CSF 3)** con TypeScript.
+
+> Storybook 10 es **solo ESM**. El proyecto ya usa `"type": "module"`, así que no hay pasos extra; los addons nuevos (`@storybook/addon-docs`) se importan desde `@storybook/addon-docs/blocks`.
 
 ## Comandos
 
@@ -16,8 +18,8 @@ npm run build-storybook # Build estático en ./storybook-static
 ### `.storybook/main.ts`
 
 - Stories: `../stories/**/*.stories.tsx` y `../stories/docs/*.mdx`.
-- Addons: `essentials`, `interactions`, `links`, `a11y`, `themes`.
-- Autodocs activado por tag (`docs.autodocs: 'tag'`).
+- Addons: `links`, `a11y`, `themes`, `mcp` y `docs` (en Storybook 9+ `essentials` y `interactions` se consolidaron y desaparecieron).
+- Autodocs activado por tag en cada meta (`tags: ['autodocs']`); `docs.autodocs` ya no existe en la configuración.
 - PostCSS: `./postcss.config.cjs`.
 
 ### `.storybook/preview.tsx`

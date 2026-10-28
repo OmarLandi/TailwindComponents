@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/react-vite';
 import { ThemeProvider } from '../src/components/Themes';
 import type { ColorMode, PaletteName } from '../src/components/Themes';
 import '../src/index.css';
@@ -12,21 +12,20 @@ const preview: Preview = {
       },
     },
     backgrounds: {
-      default: 'light',
-      values: [
-        {
+      options: {
+        light: {
           name: 'light',
           value: '#ffffff',
         },
-        {
+
+        dark: {
           name: 'dark',
           value: '#1a1a1a',
-        },
-      ],
+        }
+      }
     },
     viewport: {
-      defaultViewport: 'responsive',
-      viewports: {
+      options: {
         mobile: {
           name: 'Mobile (375px)',
           styles: { width: '375px', height: '812px' },
@@ -39,9 +38,10 @@ const preview: Preview = {
           name: 'Desktop (1280px)',
           styles: { width: '1280px', height: '800px' },
         },
-      },
+      }
     },
   },
+
   globalTypes: {
     colorMode: {
       name: 'Color Mode',
@@ -81,6 +81,7 @@ const preview: Preview = {
       },
     },
   },
+
   decorators: [
     (Story, context) => {
       const colorMode = (context.globals.colorMode || 'light') as ColorMode;
@@ -102,6 +103,17 @@ const preview: Preview = {
       );
     },
   ],
+
+  initialGlobals: {
+    viewport: {
+      value: 'responsive',
+      isRotated: false
+    },
+
+    backgrounds: {
+      value: 'light'
+    }
+  }
 };
 
 export default preview;

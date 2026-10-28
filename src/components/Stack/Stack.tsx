@@ -56,19 +56,7 @@ export interface StackProps
 }
 
 const Stack = React.forwardRef<HTMLDivElement, StackProps>(
-  (
-    {
-      className,
-      direction,
-      gap,
-      align,
-      justify,
-      wrap,
-      asChild = false,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, direction, gap, align, justify, wrap, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'div';
 
     return (

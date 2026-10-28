@@ -13,7 +13,7 @@ Todos los componentes deben ser usables con teclado y lectores de pantalla, y cu
 | `@testing-library/react`      | Queries por rol/nombre accesible              |
 | `@testing-library/user-event` | Interacciones reales (teclado, click, tab)    |
 
-> `@axe-core/react` está instalado como dependencia de desarrollo, pero **los tests del proyecto usan `axe.run(container)` de `axe-core`** y comprueban `results.violations`. No uses `toHaveNoViolations`.
+> Los tests usan `axe.run(container)` de `axe-core` directamente y comprueban `results.violations`. No uses `toHaveNoViolations` ni `@axe-core/react` (ya no está instalado).
 
 ## Patrón de test obligatorio
 

@@ -43,9 +43,7 @@ describe('EmptyState', () => {
   });
 
   it('applies surface and size variants', () => {
-    const { container } = render(
-      <EmptyState title="Nothing here" variant="muted" size="lg" />
-    );
+    const { container } = render(<EmptyState title="Nothing here" variant="muted" size="lg" />);
 
     const root = container.firstChild;
     expect(root).toHaveClass('bg-muted/30', 'border-dashed', 'py-16');

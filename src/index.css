@@ -1,6 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@config '../tailwind.config.cjs';
+
+@layer base {
+  /* Tailwind 4 defaults borders to currentColor; keep the themed border token. */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: hsl(var(--border));
+  }
+}
+
+/* Accordion animations (`animate-accordion-down/up`) come from `tw-animate-css`,
+   which ships both the `--animate-*` tokens and their `@keyframes`. Do not declare
+   them in `tailwind.config.cjs`: keyframes generated from the JS config have no
+   source file and make Vite warn that PostCSS was called without the `from` option. */
 
 @layer base {
   :root {

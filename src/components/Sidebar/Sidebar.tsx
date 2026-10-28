@@ -12,7 +12,7 @@ const sidebarVariants = cva(
     variants: {
       variant: {
         default: '',
-        floating: 'm-2 rounded-lg border shadow-sm',
+        floating: 'm-2 rounded-lg border shadow-xs',
         inset: 'min-h-screen',
       },
       side: {

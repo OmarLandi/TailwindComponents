@@ -12,7 +12,7 @@ const navbarVariants = cva(
     variants: {
       variant: {
         default: '',
-        floating: 'border-0 shadow-sm mt-4 mx-4 rounded-lg',
+        floating: 'border-0 shadow-xs mt-4 mx-4 rounded-lg',
         transparent: 'bg-transparent border-transparent backdrop-blur-none',
       },
     },

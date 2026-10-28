@@ -1,0 +1,150 @@
+import * as React from 'react';
+import { Link2, Mail, MessageCircle, Send } from 'lucide-react';
+
+import { cn } from '@/lib/utils';
+
+// lucide-react 1.x removed brand icons; these two glyphs cover the social channels.
+const FacebookIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073Z" />
+  </svg>
+);
+
+const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286ZM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065Zm1.782 13.019H3.555V9h3.564v11.452ZM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0Z" />
+  </svg>
+);
+
+export type ShareChannel = 'x' | 'facebook' | 'linkedin' | 'whatsapp' | 'email' | 'copy';
+
+export interface ShareBarProps extends React.HTMLAttributes<HTMLDivElement> {
+  url: string;
+  title?: string;
+  description?: string;
+  channels?: ShareChannel[];
+  orientation?: 'horizontal' | 'vertical';
+  size?: 'sm' | 'default';
+}
+
+const channelLabels: Record<ShareChannel, string> = {
+  x: 'Share on X',
+  facebook: 'Share on Facebook',
+  linkedin: 'Share on LinkedIn',
+  whatsapp: 'Share on WhatsApp',
+  email: 'Share by email',
+  copy: 'Copy link',
+};
+
+const ShareBar = React.forwardRef<HTMLDivElement, ShareBarProps>(
+  (
+    {
+      className,
+      url,
+      title = '',
+      description = '',
+      channels = ['x', 'facebook', 'linkedin', 'whatsapp', 'copy'],
+      orientation = 'horizontal',
+      size = 'default',
+      ...props
+    },
+    ref
+  ) => {
+    const [copied, setCopied] = React.useState(false);
+
+    const encodedUrl = encodeURIComponent(url);
+    const encodedTitle = encodeURIComponent(title);
+    const encodedDescription = encodeURIComponent(description);
+
+    const links: Record<ShareChannel, string> = {
+      x: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+      email: `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A${encodedUrl}`,
+      copy: url,
+    };
+
+    const icons: Record<ShareChannel, React.ReactNode> = {
+      x: <Send className="h-4 w-4" aria-hidden="true" />,
+      facebook: <FacebookIcon className="h-4 w-4" aria-hidden="true" />,
+      linkedin: <LinkedinIcon className="h-4 w-4" aria-hidden="true" />,
+      whatsapp: <MessageCircle className="h-4 w-4" aria-hidden="true" />,
+      email: <Mail className="h-4 w-4" aria-hidden="true" />,
+      copy: <Link2 className="h-4 w-4" aria-hidden="true" />,
+    };
+
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard?.writeText(url);
+      } catch {
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+      }
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'flex gap-2',
+          orientation === 'vertical' ? 'flex-col' : 'flex-row flex-wrap',
+          className
+        )}
+        {...props}
+      >
+        {channels.map(channel => {
+          const isCopy = channel === 'copy';
+          const content = (
+            <>
+              {icons[channel]}
+              <span className="sr-only">{channelLabels[channel]}</span>
+            </>
+          );
+
+          if (isCopy) {
+            return (
+              <button
+                key={channel}
+                type="button"
+                onClick={handleCopy}
+                className={cn(
+                  'inline-flex items-center justify-center rounded-md border border-input bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                  size === 'sm' ? 'h-8 w-8' : 'h-10 w-10'
+                )}
+                aria-label={copied ? 'Link copied' : channelLabels[channel]}
+              >
+                {content}
+              </button>
+            );
+          }
+
+          return (
+            <a
+              key={channel}
+              href={links[channel]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                'inline-flex items-center justify-center rounded-md border border-input bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                size === 'sm' ? 'h-8 w-8' : 'h-10 w-10'
+              )}
+              aria-label={channelLabels[channel]}
+            >
+              {content}
+            </a>
+          );
+        })}
+      </div>
+    );
+  }
+);
+ShareBar.displayName = 'ShareBar';
+
+export { ShareBar };

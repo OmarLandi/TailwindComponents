@@ -68,14 +68,14 @@ const parseHsl = (value: string): [number, number, number] => {
 
 const toRgb = (value: string): [number, number, number] => {
   const [hue, saturation, lightness] = parseHsl(value);
-  const normalizedHue = ((hue % 360) + 360) % 360 / 60;
+  const normalizedHue = (((hue % 360) + 360) % 360) / 60;
   const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
   const x = chroma * (1 - Math.abs((normalizedHue % 2) - 1));
   const offset = lightness - chroma / 2;
 
-  let red = 0;
-  let green = 0;
-  let blue = 0;
+  let red: number;
+  let green: number;
+  let blue: number;
 
   if (normalizedHue < 1) {
     [red, green, blue] = [chroma, x, 0];
@@ -203,9 +203,7 @@ describe('Theme contrast', () => {
         const ratio = contrastRatio(foreground, background);
 
         if (ratio < 4.5) {
-          failures.push(
-            `${label}: ${foregroundKey} on ${backgroundKey} is ${ratio.toFixed(2)}:1`
-          );
+          failures.push(`${label}: ${foregroundKey} on ${backgroundKey} is ${ratio.toFixed(2)}:1`);
         }
       }
     }

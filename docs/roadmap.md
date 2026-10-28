@@ -20,8 +20,8 @@ Complejidad: **BÃ¡sico** (Ã¡tomo, 1â€“2 h), **Medio** (composiciÃ³n R
 
 **Fortalezas**
 
-- 49 componentes con CVA, `forwardRef`, `displayName` y patrÃ³n shadcn/ui consistente.
-- 402 tests con `axe-core` en todos los archivos y 33 pruebas Playwright de plantillas (375/768/1280); `tsc` y ESLint limpios.
+- 102 componentes con CVA, `forwardRef`, `displayName` y patrÃ³n shadcn/ui consistente.
+- 520 tests con `axe-core` en todos los archivos y 33 pruebas Playwright de plantillas (375/768/1280); `tsc` y ESLint limpios.
 - Theming por variables CSS, 13 paletas light/dark y Storybook con toolbar de temas.
 - Storybook como documentaciÃ³n viva y build ESM + CJS con `.d.ts`.
 
@@ -40,19 +40,20 @@ Complejidad: **BÃ¡sico** (Ã¡tomo, 1â€“2 h), **Medio** (composiciÃ³n R
 
 ## 3. Actualizaciones recomendadas
 
-| Ãrea         | Actual                | Objetivo                              | Por quÃ©                                                             | Prioridad |
-| ------------ | --------------------- | ------------------------------------- | -------------------------------------------------------------------- | --------- |
-| React        | `^18.3.0` (peer)      | `^18.3.0 \|\| ^19.0.0`                | React 19 es el default en apps nuevas; mantener compatibilidad dual. | P1        |
-| Storybook    | `^8.6`                | 9.x (o Ãºltima estable)               | Addons unificados, mejor test-runner y docs; migraciÃ³n de CSF.      | P1        |
-| Vite         | `^6.0`                | 7.x                                   | Mejor build y soporte de plugins; requiere probar `vite-plugin-dts`. | P1        |
-| Vitest       | `^2.1`                | 3.x                                   | API de coverage y performance; revisar `jsdom`/`happy-dom`.          | P1        |
-| Tailwind CSS | `^3.4`                | 4.x (evaluar)                         | Config CSS-first (`@theme`), OKLCH y menos JS. MigraciÃ³n grande.    | P2        |
-| TypeScript   | `^5.7`                | 5.9+                                  | Mejoras de narrowing y `isolatedDeclarations`.                       | P1        |
-| Radix UI     | 19 paquetes sueltos   | Paquete unificado `radix-ui`          | Menos dependencias y versiones alineadas.                            | P2        |
-| Release      | `release-it`          | Changesets                            | Versionado por PR, changelog determinista y monorepo-friendly.       | P1        |
-| Iconos       | `lucide-react ^0.469` | Ãšltima estable                       | Iconos nuevos y correcciones; mantiene tree-shaking.                 | P2        |
-| Fechas       | `date-fns ^4`         | Mantener / revisar `react-day-picker` | Evitar duplicar utilidades de fecha en el bundle.                    | P2        |
-| Lint         | ESLint 9 flat         | Mantener + `eslint-plugin-jsx-a11y`   | Reglas a11y estÃ¡ticas complementan a `axe-core`.                    | P1        |
+| Ãrea         | Actual                      | Objetivo                              | Por quÃ©                                                         | Prioridad |
+| ------------ | --------------------------- | ------------------------------------- | ---------------------------------------------------------------- | --------- |
+| React        | `^19.3` (dev)               | Hecho: peers `^18.3.0 \|\| ^19.0.0`   | React 19 por defecto sin romper a los consumidores en 18.3+.     | Hecho     |
+| Storybook    | `^10.6`                     | Última estable                        | Ya migrado; addons consolidados y ESM-only.                      | Hecho     |
+| Vite         | `^8.3`                      | Hecho                                 | Build con rolldown; `vite-plugin-dts` 5 y `postcss.config.cjs`.  | Hecho     |
+| Vitest       | `^5.0`                      | Última estable                        | Ya en 5.x; revisar `happy-dom` y la API de coverage.             | P2        |
+| DOM de tests | `jsdom ^30` + `jest-dom ^7` | Hecho                                 | Testing Library al día; exige Node 22.22+ en desarrollo.         | Hecho     |
+| Tailwind CSS | `^4.3`                      | Hecho (queda migrar a `@theme`)       | Config vía `@config`, `tw-animate-css` y sin `autoprefixer`.     | Hecho     |
+| TypeScript   | `^6.0`                      | 6.0 (7.x bloqueado)                   | `typescript-eslint` exige `<6.1`; no se puede subir a 7 todavía. | Hecho     |
+| Radix UI     | 19 paquetes sueltos         | Paquete unificado `radix-ui`          | Menos dependencias y versiones alineadas.                        | P2        |
+| Release      | `release-it ^21`            | Changesets                            | Versionado por PR, changelog determinista y monorepo-friendly.   | P1        |
+| Iconos       | `lucide-react ^1.63`        | Hecho                                 | 1.x eliminó los iconos de marca: `ShareBar` usa SVG inline.      | Hecho     |
+| Fechas       | `date-fns ^4`               | Mantener / revisar `react-day-picker` | Evitar duplicar utilidades de fecha en el bundle.                | P2        |
+| Lint         | ESLint 10 flat              | Mantener + `eslint-plugin-jsx-a11y`   | Reglas a11y estÃ¡ticas complementan a `axe-core`.                | P1        |
 
 > No actualizar todo a la vez. Un PR por grupo (React, Storybook, build) con la suite en verde.
 
@@ -71,7 +72,7 @@ Complejidad: **BÃ¡sico** (Ã¡tomo, 1â€“2 h), **Medio** (composiciÃ³n R
 | **CI**                                | GitHub Actions: `lint`, `tsc --noEmit`, `test:run`, `build`, `build-storybook` en Node 20/22. Cache de npm.                                                     | P0        |
 | **Cobertura**                         | Umbral mÃ­nimo (70â€“80 %) en Vitest y publicar el reporte como artefacto.                                                                                      | P1        |
 | **`components.json`**                 | Hecho: apunta a `tailwind.config.cjs`.                                                                                                                          | â€”       |
-| **Pre-commit con lint-staged**        | Usar `.lintstagedrc`: Prettier + ESLint solo en staged; tests completos en `pre-push` o CI.                                                                     | P0        |
+| **Pre-commit rápido**                 | Prettier + ESLint solo en staged (requiere reintroducir `lint-staged`, eliminado por desuso); tests completos en `pre-push` o CI.                               | P1        |
 | **PublicaciÃ³n**                      | Changesets + `npm publish --provenance` desde CI; `publishConfig.access`.                                                                                       | P1        |
 
 ## 5. Theming (prioridad mÃ¡xima)
@@ -107,7 +108,7 @@ Criterio: paridad con shadcn/ui, MUI, Chakra, Mantine y Ant Design; todos deben
 consumir tokens semÃ¡nticos y funcionar en las 13 paletas y en light/dark.
 
 > **Actualizacion 2026-10-22:** `Field`, `Form`, `AlertDialog`, `Command` y `EmptyState` ya
-> estan implementados (49 componentes, 402 tests). Se mantienen en las tablas como historial
+> estan implementados (102 componentes, 520 tests). Se mantienen en las tablas como historial
 > de priorizacion; las primitivas, las plantillas y la regresion visual ya estan implementadas. La siguiente brecha son los componentes de datos.
 
 ### 6.1 BÃ¡sicos (Ã¡tomos y composiciÃ³n simple)

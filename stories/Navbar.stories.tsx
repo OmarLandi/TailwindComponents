@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
   Navbar,
@@ -136,9 +136,6 @@ export const Playground: Story = {
 };
 
 export const Mobile: Story = {
-  parameters: {
-    viewport: { defaultViewport: 'mobile' },
-  },
   render: function Render() {
     const [isOpen, setIsOpen] = useState(true);
     return (
@@ -173,5 +170,11 @@ export const Mobile: Story = {
         </NavbarMenu>
       </Navbar>
     );
+  },
+  globals: {
+    viewport: {
+      value: 'mobile',
+      isRotated: false
+    }
   },
 };

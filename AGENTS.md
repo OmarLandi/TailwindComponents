@@ -27,35 +27,34 @@ Use the **`crear-layout`** skill when composing pages or layout primitives.
 
 ## Project Overview
 
-- **Type**: React Component Library (UI Components) â€” 49 components + layout layer
-- **Framework**: React 18+ with TypeScript (strict)
-- **Styling**: Tailwind CSS 3.4 + CSS variables, shadcn/ui patterns
+- **Type**: React Component Library (UI Components) â€” 102 components + layout layer
+- **Framework**: React 19 with TypeScript 6.0 (strict); peers accept React 18.3+ or 19
+- **Styling**: Tailwind CSS 4 + CSS variables, shadcn/ui patterns
 - **Variants**: `class-variance-authority` (CVA); primitives from Radix UI
-- **Build Tool**: Vite 6 (`vite-plugin-dts`, ESM + CJS)
-- **Testing**: Vitest + Testing Library + `axe-core` (accessibility)
-- **Documentation**: Storybook 8 (CSF 3) on port `6006`
+- **Build Tool**: Vite 8 (`vite-plugin-dts`, ESM + CJS)
+- **Testing**: Vitest 5 + Testing Library + `axe-core` (accessibility) on jsdom 30
+- **Documentation**: Storybook 10 (CSF 3) on port `6006`
 - **Package manager**: npm (lockfile: `package-lock.json`)
 
 ### Verified status (last analysis)
 
-| Check              | Command            | Result                       |
-| ------------------ | ------------------ | ---------------------------- |
-| Tests              | `npm run test:run` | 52 files / 402 tests passing |
-| Templates E2E      | `npm run test:e2e` | 33 Playwright cases passing  |
-| Type check         | `npx tsc --noEmit` | No errors                    |
-| Components on disk | â€”                | 49 + `Themes`                |
-| Palettes           | â€”                | 13 (light + dark)            |
+| Check              | Command            | Result                        |
+| ------------------ | ------------------ | ----------------------------- |
+| Tests              | `npm run test:run` | 104 files / 520 tests passing |
+| Templates E2E      | `npm run test:e2e` | 33 Playwright cases passing   |
+| Type check         | `npx tsc --noEmit` | No errors                     |
+| Components on disk | —                  | 102 + `Themes`                |
+| Palettes           | â€”                | 13 (light + dark)             |
 
 > âš ï¸ 43 component folders exist on disk but are **untracked in git** (`git status` shows `??`). Do not assume `git ls-files` is the full inventory.
 
 ### Component inventory
 
-- **Navigation (6)**: Breadcrumb, Command, Navbar, Pagination, Sidebar, Tabs
-- **Forms (14)**: Button, Checkbox, Combobox, DatePicker, Field, Form, InputOTP, RadioGroup, Select, Slider, Switch, Textarea, TextField, ToggleGroup
-- **Data Display (21)**: Accordion, Alert, AlertDialog, Avatar, Badge, Calendar, Card, Carousel, Container, Dialog, Drawer, DropdownMenu, EmptyState, ErrorBoundary, Footer, Popover, Progress, Skeleton, Table, Toast, Tooltip
-- **Utilities**: ThemeProvider, ThemeToggle, `useTheme`, `palettes` / `getPalette` (13 palettes)
-- **Layout (8)**: AppShell, Grid, PageHeader, Prose, Section, SkipLink, Stack, VisuallyHidden
-- **Layout planned**: AspectRatio, ScrollArea, Separator. See `docs/layouts.md`.
+- **Navigation (8)**: Breadcrumb, Command, Menubar, Navbar, NavigationMenu, Pagination, Sidebar, Tabs
+- **Forms (22)**: Button, Checkbox, Combobox, Composer, DatePicker, DateRangePicker, Field, FileUpload, Form, InputOTP, MultiSelect, NumberInput, PasswordInput, RadioGroup, SearchInput, Select, Slider, Switch, Textarea, TextField, TimePicker, ToggleGroup
+- **Data Display (62)**: Accordion, Alert, AlertDialog, Article, AuthorBio, Avatar, Badge, BottomSheet, BreakingNewsBanner, Calendar, Card, CartItem, CartSummary, Carousel, Chart, CheckoutStepper, Collapsible, Comment, CommentThread, Container, Dialog, Drawer, DropdownMenu, EmptyState, ErrorBoundary, ErrorState, FeedPost, Footer, HoverCard, NotificationItem, Popover, Price, ProductCard, ProfileHeader, Progress, Rating, ReactionBar, Review, Skeleton, Stat, StockBadge, StoryCarousel, SuggestionList, Table, Timeline, Toast, Toolbar, Tooltip, TreeView
+- **Utilities (6)**: DirectionProvider, Palette, ThemeProvider, ThemeScript, ThemeToggle, Toaster
+- **Layout (11)**: AppShell, AspectRatio, Grid, PageHeader, Prose, ScrollArea, Section, Separator, SkipLink, Stack, VisuallyHidden
 
 All folders live in `src/components/<Name>/` and are re-exported from `src/components/index.ts`.
 Page templates live in `stories/templates/` and are documented, not shipped as components.
@@ -227,14 +226,14 @@ export { Button, buttonVariants };
 
 When creating a new component, assign it to one of the following Storybook categories:
 
-| Category         | Description                              | Existing Components                                                                                                                                                                                                                              |
-| ---------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Navigation**   | Navigation and user movement             | `Breadcrumb`, `Command`, `Navbar`, `Pagination`, `Sidebar`, `Tabs`                                                                                                                                                                               |
-| **Forms**        | Data input and selection                 | `Button`, `Checkbox`, `Combobox`, `DatePicker`, `Field`, `Form`, `InputOTP`, `RadioGroup`, `Select`, `Slider`, `Switch`, `Textarea`, `TextField`, `ToggleGroup`                                                                                  |
-| **Data Display** | Content visualization and presentation   | `Accordion`, `Alert`, `AlertDialog`, `Avatar`, `Badge`, `Calendar`, `Card`, `Carousel`, `Container`, `Dialog`, `Drawer`, `DropdownMenu`, `EmptyState`, `ErrorBoundary`, `Footer`, `Popover`, `Progress`, `Skeleton`, `Table`, `Toast`, `Tooltip` |
-| **Layout**       | Distribution, spacing and page structure | `AppShell`, `Grid`, `PageHeader`, `Prose`, `Section`, `SkipLink`, `Stack`, `VisuallyHidden`                                                                                                                                                      |
-| **Utilities**    | Infrastructure and system utilities      | `ThemeProvider`, `Palette`, `ThemeToggle`                                                                                                                                                                                                        |
-| **Templates**    | Full-page compositions (stories only)    | `Dashboard`, `Auth`, `Settings`, `Marketing`, `Docs`, `Ecommerce`, `ListDetail`, `CRUD`, `States`                                                                                                                                                |
+| Category           | Description                              | Existing Components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Navigation (8)** | Navigation and user movement             | `Breadcrumb`, `Command`, `Menubar`, `Navbar`, `NavigationMenu`, `Pagination`, `Sidebar`, `Tabs`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **Forms**          | Data input and selection                 | `Button`, `Checkbox`, `Combobox`, `Composer`, `DatePicker`, `DateRangePicker`, `Field`, `FileUpload`, `Form`, `InputOTP`, `MultiSelect`, `NumberInput`, `PasswordInput`, `RadioGroup`, `SearchInput`, `Select`, `Slider`, `Switch`, `Textarea`, `TextField`, `TimePicker`, `ToggleGroup`                                                                                                                                                                                                                                                                                                                                                           |
+| **Data Display**   | Content visualization and presentation   | `Accordion`, `Alert`, `AlertDialog`, `Article`, `AuthorBio`, `Avatar`, `Badge`, `BottomSheet`, `BreakingNewsBanner`, `Calendar`, `Card`, `CartItem`, `CartSummary`, `Carousel`, `Chart`, `CheckoutStepper`, `Collapsible`, `Comment`, `CommentThread`, `Container`, `Dialog`, `Drawer`, `DropdownMenu`, `EmptyState`, `ErrorBoundary`, `ErrorState`, `FeedPost`, `Footer`, `HoverCard`, `NotificationItem`, `Popover`, `Price`, `ProductCard`, `ProfileHeader`, `Progress`, `Rating`, `ReactionBar`, `Review`, `Skeleton`, `Stat`, `StockBadge`, `StoryCarousel`, `SuggestionList`, `Table`, `Timeline`, `Toast`, `Toolbar`, `Tooltip`, `TreeView` |
+| **Layout**         | Distribution, spacing and page structure | `AppShell`, `AspectRatio`, `Grid`, `PageHeader`, `Prose`, `ScrollArea`, `Section`, `Separator`, `SkipLink`, `Stack`, `VisuallyHidden`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Utilities**      | Infrastructure and system utilities      | `DirectionProvider`, `Palette`, `ThemeProvider`, `ThemeScript`, `ThemeToggle`, `Toaster`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **Templates**      | Full-page compositions (stories only)    | `Dashboard`, `Auth`, `Settings`, `Marketing`, `Docs`, `Ecommerce`, `ListDetail`, `CRUD`, `States`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 **Rules:**
 
@@ -384,17 +383,18 @@ When creating a new component, follow these theming rules:
 
 ### Peer Dependencies (must be installed by consumer)
 
-- react (^18.3.0)
-- react-dom (^18.3.0)
+- react (^18.3.0 || ^19.0.0)
+- react-dom (^18.3.0 || ^19.0.0)
 - @radix-ui/react-slot (^1.1.0)
 
 ### Key Dependencies
 
-- tailwindcss, tailwind-merge, clsx (styling)
+- tailwindcss 4 + @tailwindcss/postcss, tailwind-merge 3, clsx (styling)
 - class-variance-authority (variants)
-- lucide-react (icons)
+- lucide-react 1.x (icons; brand glyphs are inlined because 1.x removed them)
 - @radix-ui/\* (headless components, including `react-alert-dialog`)
 - cmdk (accessible command menu/search)
+- tw-animate-css (replaces `tailwindcss-animate`, which is Tailwind 3 only)
 
 ---
 
@@ -717,6 +717,17 @@ These guidelines were distilled from a comprehensive codebase analysis and shoul
 - **Avoid redundant defaults**: If a prop has a default value (e.g., `value = 0`), don't add `|| 0` later in the code
 - **Ref forwarding**: For complex ref patterns (like OTP inputs with multiple internal refs), extract the ref callback with `React.useCallback` to avoid unnecessary re-renders and fragile type casting
 
+### Tailwind 4 gotchas
+
+- **Config is loaded through CSS**: `src/index.css` starts with `@import 'tailwindcss'`, `@import 'tw-animate-css'` and `@config '../tailwind.config.cjs'`. Keep the legacy JS config as the single source of theme tokens until a full `@theme` migration.
+- **Border color defaults to `currentColor`** in v4. `src/index.css` restores the v3 behaviour with a `@layer base` rule mapping `border-color` to `hsl(var(--border))`. Do not delete it.
+- **Renamed scales**: v3 `shadow-sm` is v4 `shadow-xs` (v4 `shadow-sm` is the old `shadow`); v3 `backdrop-blur-sm` is v4 `backdrop-blur-xs`. Check every new `shadow-*`/`backdrop-blur-*` against the v4 scale.
+- **`leading-*` now wins over `text-*`**: utilities render in a different order than v3, so `text-sm leading-relaxed` really uses the relaxed line-height. That is the intended typography; templates' snapshots encode it.
+- **Keep `keyframes`/`animation` out of `tailwind.config.cjs`**: declarations generated from the JS config have no source file, so Vite warns that PostCSS was called without the `from` option. `tw-animate-css` already ships `--animate-accordion-down/up` and their keyframes.
+- **`tailwindcss-animate` is v3 only**: use `tw-animate-css` (already imported in `src/index.css`).
+- **`dev` and `build-storybook` silence `DEP0205`**: Storybook 10 still calls `module.register()`. The scripts wrap `NODE_OPTIONS=--disable-warning=DEP0205` with `cross-env`; remove it once Storybook migrates to `module.registerHooks()`.
+- **No `autoprefixer`**: Tailwind 4 handles vendor prefixes; `postcss.config.cjs` only loads `@tailwindcss/postcss`.
+
 ### Testing Best Practices
 
 - **Axe tests are mandatory**: EVERY component must have at least one axe-core accessibility test. All component test files currently include one; do not merge a component without it.
@@ -737,25 +748,34 @@ These guidelines were distilled from a comprehensive codebase analysis and shoul
 - **Build and package exports match**: `dist/index.mjs`, `dist/index.cjs` and `dist/index.css`; `package.json` exports `./style.css`, `sideEffects` includes CSS, and `src/index.ts` imports the stylesheet (no JS injection).
 - **`components.json`** points to the real `tailwind.config.cjs`.
 - **Portals are themed**: `ThemeProvider` renders `PortalContainerProvider`, which appends a body-level node with `${colorMode} theme-${palette}`. `Dialog`, `Drawer`, `Select`, `DropdownMenu` and `Popover` pass it to Radix via `usePortalContainer`. `applyToRoot` is the opt-in global mode for `<html>` and third-party portals.
+- **No dead dev dependencies**: `@axe-core/react`, `eslint-config-prettier`, `eslint-plugin-prettier` and `lint-staged` (plus `.lintstagedrc`) were removed. Tests use `axe-core` directly, the flat ESLint config loads no Prettier plugin, and `.husky/pre-commit` runs Prettier + ESLint + `tsc` + the full test suite itself.
 
 ### Remaining
 
 1. **43 component folders, their stories and tests are untracked in git.** Run `git status` before assuming the repo has 6 components.
 2. **Radix portal tests must keep `DialogTitle`** and either `DialogDescription` or `aria-describedby={undefined}`; the P0 suite is warning-free, preserve that as new stories/tests are added.
-3. **`@axe-core/react` is unused.** Tests import `axe-core` and call `axe.run(container)`.
-4. **`.lintstagedrc` is not used** by `.husky/pre-commit`, which runs Prettier + ESLint + `tsc` + the full test suite. Expect slow commits.
-5. **The bundle ships all runtime dependencies**: the ESM build is ~707 KB / 170 KB gzip (CJS ~467 KB / 139 KB gzip) because only `react`/`react-dom` are external. Externalize Radix, `date-fns`, `embla-*`, `react-day-picker`, `cmdk` and `lucide-react` (see `docs/roadmap.md`).
-6. **README/`docs/` were stale** (Ladle, Vue, wrong file names). They were rewritten; keep them in sync when adding components.
-7. **Templates are stories only.** The nine page models live in `stories/templates/` and are
+3. **Runtime dependencies are now externalized**: the ESM build is ~250 KB / 50 KB gzip (CJS ~197 KB / 43 KB gzip, CSS ~105 KB / 17 KB gzip); Radix, `date-fns`, Embla, `react-day-picker`, `cmdk`, `lucide-react`, `clsx`, `tailwind-merge` and CVA are external. Keep the external list in sync with `package.json` dependencies.
+4. **README/`docs/` were stale** (Ladle, Vue, wrong file names). They were rewritten; keep them in sync when adding components.
+5. **Templates are stories only.** The nine page models live in `stories/templates/` and are
    covered by Vitest/axe plus Playwright at 375/768/1280; keep the screenshot baselines current.
-8. **Contrast regressions**: `tests/contrast.test.ts` now enforces AA across 13 palettes x light/dark
+6. **Contrast regressions**: `tests/contrast.test.ts` now enforces AA across 13 palettes x light/dark
    plus CSS/palette parity. Keep it green whenever tokens or palettes change.
-9. **Templates are responsive-tested; other stories are not.** Playwright checks every template at
+7. **Templates are responsive-tested; other stories are not.** Playwright checks every template at
    375/768/1280 for horizontal overflow and screenshots; non-template stories still rely on the
    Storybook viewport toolbar.
-10. **P0 regression tests**: Combobox keyboard/listbox, mobile Navbar/Sidebar modals, `Button asChild`,
-    `Slider onValueChange`, InputOTP/Select error wiring and Table scroll focus are now covered.
-    Keep those tests green; full priorities live in `docs/component-audit.md`.
+8. **P0 regression tests**: Combobox keyboard/listbox, mobile Navbar/Sidebar modals, `Button asChild`,
+   `Slider onValueChange`, InputOTP/Select error wiring and Table scroll focus are now covered.
+   Keep those tests green; full priorities live in `docs/component-audit.md`.
+9. **ESLint 10 replaced `eslint-plugin-react`**: that plugin caps at ESLint 9.7 and crashes in 10
+   (`context.getFilename` was removed). The config uses `@eslint-react/eslint-plugin` with an explicit
+   rule list (keys, DOM props, mutation, `dangerouslySetInnerHTML`, target blank), no React Compiler
+   rules. Do not re-add `eslint-plugin-react` until it supports ESLint 10.
+10. **TypeScript is pinned to 6.0.x**: `typescript-eslint` declares `typescript >=4.8.4 <6.1.0`, so TypeScript 7
+    is not installable yet. TS 6 deprecated `baseUrl`, which was removed from `tsconfig.json` (`paths`
+    resolves relative to the config file) and `src/vite-env.d.ts` declares the CSS side-effect import.
+11. **`release-it` 21 reads `.release-it.json`** (dot file); the old `release-it.json` is ignored and made
+    the CLI run npm steps. `overrides` keep `undici` on 8.x (release-it pins a vulnerable 7.29.1) and
+    `basic-ftp` on 6.2.3.
 
 ## Definition of Done (new component)
 
